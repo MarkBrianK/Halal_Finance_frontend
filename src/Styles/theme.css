@@ -13,9 +13,8 @@ body {
   }
 
   form {
-    max-width: 500px;
-    margin: auto;
-    background: #333;
+
+    background: #171717;
     padding: 20px;
     border-radius: 10px;
     color: gold;

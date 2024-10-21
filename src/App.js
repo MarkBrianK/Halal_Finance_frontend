@@ -5,6 +5,7 @@ import SignUp from './Auth/signup';
 import Login from './Auth/login';
 import HomePage from './Components/Pages/HomePage';
 import NavBar from './Components/Layouts/Sidebar';
+import Logout from './Auth/logout'
 
 const App = () => {
   const location = useLocation();
@@ -19,11 +20,12 @@ const App = () => {
             <NavBar />
           </Col>
         )}
-        <Col md={showSidebar ? 6 : 9} className="content">
+        <Col md={showSidebar ? 6 : 12} className="content">
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/login" element={<Login />} />
+            <Route path ="/logout" element ={<Logout/>}/>
           </Routes>
         </Col>
       </Row>

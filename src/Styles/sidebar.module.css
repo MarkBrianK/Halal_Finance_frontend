@@ -1,30 +1,9 @@
-/* 
-.sidebar {
-    width: 250px;
-    height: 100vh;
-    background-color: #343a40;
-    color: white;
-    padding: 20px;
-    position: fixed;
-    top: 0;
-    left: 0;
-    overflow-y: auto;
-}
+@import url('https://fonts.cdnfonts.com/css/noto-serif-display');
 
-.logo {
-    display: flex;
-    align-items: center;
-    margin-bottom: 30px;
-    color: white;
-    font-size: 24px;
+.halal {
+    font-family: 'Noto Serif Display', sans-serif;
+    font-style: normal;
+    font-size: 30px;
+    color: #c7a034;
+    font-weight: bold;
 }
-
-.nav-link {
-    color: white;
-    margin: 10px 0;
-}
-
-.nav-link:hover {
-    background-color: #495057;
-    border-radius: 5px;
-} */

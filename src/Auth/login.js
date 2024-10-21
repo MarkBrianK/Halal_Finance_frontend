@@ -10,13 +10,23 @@ function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios.post('http://localhost:3000/users/sign_in', { user: formData })
+    axios.post(
+      'http://localhost:3000/users/sign_in',
+      { user: formData },
+      {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        withCredentials: true,
+      })
       .then(response => {
-        console.log(response);
+
+        localStorage.setItem('token', response.data.token);
         navigate("/");
       })
       .catch(error => {
-        alert('Error: ' + error.response.data.error);
+        alert('Error: ' + (error.response?.data.message || 'Something went wrong'));
       });
   };
 
