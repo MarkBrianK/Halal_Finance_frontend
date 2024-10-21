@@ -1,25 +1,41 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
+import { Container, Row, Col } from 'react-bootstrap';
+import SignUp from './Auth/signup';
+import Login from './Auth/login';
+import HomePage from './Components/Pages/HomePage';
+import NavBar from './Components/Layouts/Sidebar';
 
-function App() {
+const App = () => {
+  const location = useLocation();
+
+  const showSidebar = location.pathname === "/";
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Container fluid>
+      <Row>
+        {showSidebar && (
+          <Col md={3} className="sidebar">
+            <NavBar />
+          </Col>
+        )}
+        <Col md={showSidebar ? 6 : 9} className="content">
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="/login" element={<Login />} />
+          </Routes>
+        </Col>
+      </Row>
+    </Container>
   );
-}
+};
 
-export default App;
+
+const WrappedApp = () => (
+  <Router>
+    <App />
+  </Router>
+);
+
+export default WrappedApp;

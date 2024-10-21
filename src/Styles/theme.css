@@ -1,0 +1,26 @@
+body {
+    background-color: black ;
+    color: gold;
+  }
+
+  button, .btn {
+    background-color: #1a474a;
+    color: white;
+  }
+  button , .btn:hover{
+    color: white;
+    background-color: black;
+  }
+
+  form {
+    max-width: 500px;
+    margin: auto;
+    background: #333;
+    padding: 20px;
+    border-radius: 10px;
+    color: gold;
+  }
+
+  input, label {
+    color: #fff;
+  }
