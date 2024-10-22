@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Offcanvas, Nav, Button } from "react-bootstrap";
-import { FaBars, FaTimes, FaHome, FaSignInAlt, FaUserPlus, FaChartPie } from "react-icons/fa";
+import { FaBars, FaTimes, FaHome, FaChartPie } from "react-icons/fa";
 import logo from "../../Assets/Images/halal.jpeg";
 import styles from '../../Styles/sidebar.module.css'; // importing the CSS module
 
 function Sidebar() {
     const [isOpen, setIsOpen] = useState(false);
+    const navigate = useNavigate();
 
     const toggleSidebar = () => {
         setIsOpen((prev) => !prev);
@@ -27,11 +28,18 @@ function Sidebar() {
         };
     }, []);
 
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        window.location.reload();
+        navigate('/');
+    };
+
     return (
         <>
             <Button
                 onClick={toggleSidebar}
-                style={{ margin: '20px', backgroundColor: '#343a40', border: 'none' }}
+                className="sidebar-toggle-btn"
+                style={{ margin: '20px', backgroundColor: '#c7a034', border: 'none' }}
             >
                 {isOpen ? <FaTimes style={{ color: 'white' }} /> : <FaBars style={{ color: 'white' }} />}
             </Button>
@@ -42,29 +50,30 @@ function Sidebar() {
                 style={{
                     backgroundColor: '#343a40',
                     color: 'white',
-                    width: '200px',
+                    width: '250px',
                 }}
             >
                 <Offcanvas.Header closeButton>
                     <Offcanvas.Title style={{ display: 'flex', alignItems: 'center' }}>
-                        <img src={logo} alt="Company Logo" style={{ marginRight: '10px', height: '40px', borderRadius: "50%" }} />
+                        <img src={logo} alt="Company Logo" style={{ marginRight: '10px', height: '50px', borderRadius: "50%" }} />
                         <span className={styles.halal}>HALAL</span>
                     </Offcanvas.Title>
                 </Offcanvas.Header>
                 <Offcanvas.Body>
                     <Nav className="flex-column">
-                        <Nav.Link as={Link} to="/" style={{ color: 'white' }}>
-                            <FaHome style={{ marginRight: '8px' }} /> Home
+                        <Nav.Link as={Link} to="/" className={styles.navlink}>
+                            <FaHome className={styles.icon} /> Home
                         </Nav.Link>
-                        <Nav.Link as={Link} to="/login" style={{ color: 'white' }}>
-                            <FaSignInAlt style={{ marginRight: '8px' }} /> Login
+                        <Nav.Link as={Link} to="/dashboard" className={styles.navlink}>
+                            <FaChartPie className={styles.icon} /> Dashboard
                         </Nav.Link>
-                        <Nav.Link as={Link} to="/signup" style={{ color: 'white' }}>
-                            <FaUserPlus style={{ marginRight: '8px' }} /> Sign Up
-                        </Nav.Link>
-                        <Nav.Link as={Link} to="/dashboard" style={{ color: 'white' }}>
-                            <FaChartPie style={{ marginRight: '8px' }} /> Dashboard
-                        </Nav.Link>
+                        <Button
+                            onClick={handleLogout}
+                            className={`${styles.logoutBtn} mt-auto`}
+                            style={{ backgroundColor: '#c7a034', border: 'none' }}
+                        >
+                            Logout
+                        </Button>
                     </Nav>
                 </Offcanvas.Body>
             </Offcanvas>

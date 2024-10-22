@@ -1,25 +1,101 @@
+/* Global theme settings for the entire website */
+
+/* Background and Text Colors */
 body {
-    background-color: black ;
-    color: gold;
-  }
+  background-color: white;
+  color: black;
+  font-family: 'Arial', sans-serif;
+}
 
-  button, .btn {
-    background-color: #1a474a;
-    color: white;
-  }
-  button , .btn:hover{
-    color: white;
-    background-color: black;
-  }
+/* Buttons */
+button, .btn {
+  background-color: black; /* Dark teal */
+  color: white;
+  border-radius: 5px;
+  transition: background-color 1s, color 1s;
+}
 
-  form {
+button:hover, .btn:hover {
+  background-color: goldenrod; /* Hover color change */
+  color: white !important;
+  border-color: gold;
+}
 
-    background: #171717;
-    padding: 20px;
-    border-radius: 10px;
-    color: gold;
-  }
+button:focus, .btn:focus {
+  box-shadow: none;
+  outline: none;
+}
 
-  input, label {
-    color: #fff;
-  }
+/* Forms */
+form {
+  background-color: #171717; /* Dark background for forms */
+  padding: 20px;
+  border-radius: 10px;
+  color: gold; /* Form text color */
+}
+
+input, label {
+  color: #fff; /* Input and label text color */
+  background-color: #1a1a1a; /* Dark input background */
+  border: 1px solid #444; /* Subtle border for inputs */
+}
+
+input:focus {
+  border-color: gold; /* Focus effect */
+  box-shadow: none;
+  outline: none;
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+  color: black; /* Heading color */
+}
+
+/* Links */
+a {
+  color: gold;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #ffdd57;
+  text-decoration: underline;
+}
+
+/* Tables */
+table {
+  background-color: #f8f9fa;
+  color: black;
+}
+
+th {
+  background-color: #1a474a; /* Header row background */
+  color: white;
+}
+
+td {
+  background-color: white;
+  color: black;
+}
+
+/* Footer */
+footer {
+  background-color: black;
+  color: gold;
+  padding: 20px 0;
+  text-align: center;
+}
+
+/* Utility classes */
+.text-gold {
+  color: gold;
+}
+
+.bg-black {
+  background-color: black;
+}
+
+.bg-white {
+  background-color: white;
+}
+
