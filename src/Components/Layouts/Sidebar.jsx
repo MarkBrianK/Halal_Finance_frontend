@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Offcanvas, Nav, Button, Modal, Spinner } from "react-bootstrap";
 import { FaBars, FaTimes, FaHome, FaChartPie } from "react-icons/fa";
 import logo from "../../Assets/Images/halal.jpeg";
@@ -8,8 +8,7 @@ import styles from '../../Styles/sidebar.module.css'; // importing the CSS modul
 function Sidebar() {
     const [isOpen, setIsOpen] = useState(false);
     const [showModal, setShowModal] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
-    const navigate = useNavigate();
+    const [isLoading, setIsLoading] = useState(false)
 
     const toggleSidebar = () => {
         setIsOpen((prev) => !prev);
