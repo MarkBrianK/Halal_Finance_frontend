@@ -4,7 +4,12 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 function SignUp() {
-  const [formData, setFormData] = useState({ email: '', password: '', password_confirmation: '' });
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+    password_confirmation: '',
+    role: 'borrower' // Default role
+  });
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
@@ -15,6 +20,7 @@ function SignUp() {
       return;
     }
 
+    // Send role along with the user data
     axios.post('http://localhost:3000/users', { user: formData })
       .then(response => {
         alert('Confirmation email sent! Check your inbox.');
@@ -35,7 +41,7 @@ function SignUp() {
               {error && <div className="alert alert-danger">{error}</div>}
               <Form onSubmit={handleSubmit} className="mt-3">
                 <Form.Group controlId="formEmail">
-                  <Form.Label className="formlabel" style={{ color: '#333' }}>Email address</Form.Label>
+                  <Form.Label className="formlabel" style={{ color: 'white' }}>Email address</Form.Label>
                   <Form.Control
                     type="email"
                     placeholder="Enter email"
@@ -46,8 +52,21 @@ function SignUp() {
                   />
                 </Form.Group>
 
+                <Form.Group controlId="formRole">
+                  <Form.Label className="formlabel" style={{ color: 'white' }}>Select Role</Form.Label>
+                  <Form.Select
+                    value={formData.role}
+                    onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+                    className={`mb-3 ${error ? 'is-invalid' : ''}`}
+                    style={{ borderRadius: '4px', borderColor: error ? '#e3342f' : '#ccc' }}
+                  >
+                    <option value="borrower">Borrower</option>
+                    <option value="investor">Investor</option>
+                  </Form.Select>
+                </Form.Group>
+
                 <Form.Group controlId="formPassword">
-                  <Form.Label className="formlabel" style={{ color: '#333' }}>Password</Form.Label>
+                  <Form.Label className="formlabel" style={{ color: 'white' }}>Password</Form.Label>
                   <Form.Control
                     type="password"
                     placeholder="Password"
@@ -59,7 +78,7 @@ function SignUp() {
                 </Form.Group>
 
                 <Form.Group controlId="formPasswordConfirm">
-                  <Form.Label className="formlabel" style={{ color: '#333' }}>Confirm Password</Form.Label>
+                  <Form.Label className="formlabel" style={{ color: 'white' }}>Confirm Password</Form.Label>
                   <Form.Control
                     type="password"
                     placeholder="Confirm Password"
