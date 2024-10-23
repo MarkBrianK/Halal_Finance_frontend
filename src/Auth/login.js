@@ -13,11 +13,23 @@ function Login({ onLogin }) {
     axios.post('http://localhost:3000/users/sign_in', { user: formData })
       .then(response => {
         localStorage.setItem('token', response.data.token);
-        onLogin(); // Call the login handler
-        navigate("/");
+        const role = response.data.role;  // Get the role from the response
+        localStorage.setItem('role', role);
+        onLogin(role);
+
+        // Navigate based on the user's role
+        if (role === 'admin') {
+          navigate('/admin-dashboard');
+        } else if (role === 'borrower') {
+          navigate('/borrower-dashboard');
+        } else if (role === 'investor') {
+          navigate('/investor-dashboard');
+        } else {
+          navigate("/"); // Default navigation
+        }
       })
       .catch(error => {
-        setError(error.response?.data.message || 'Something went wrong');
+        setError(error.response?.data.error || 'Something went wrong');
       });
   };
 

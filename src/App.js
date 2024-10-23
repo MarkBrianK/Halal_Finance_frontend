@@ -6,13 +6,25 @@ import Login from './Auth/login';
 import HomePage from './Components/Pages/HomePage';
 import NavBar from './Components/Layouts/Sidebar';
 import Logout from './Auth/logout';
+import BorrowerDashboard from './Components/Dashboard/BorrowerDashboard';
+import AdminDashboard from './Components/Dashboard/AdminDashboard';
+import InvestorDashboard from './Components/Dashboard/InvestorDashboard';
+import PitchList from './Components/Pitches/PitchList';
+import AddPitch from './Components/Pitches/AddPitch';
+import UpdatePitch from './Components/Pitches/UpdatePitch';
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userRole, setUserRole] = useState(null);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    setIsLoggedIn(!!token); // Check if the token exists
+    const role = localStorage.getItem('role');
+
+    if (token) {
+      setIsLoggedIn(true);
+      setUserRole(role);
+    }
   }, []);
 
   const showSidebar = isLoggedIn;
@@ -25,12 +37,34 @@ const App = () => {
             <NavBar />
           </Col>
         )}
-        <Col md={showSidebar ? 6 : 12} className="content">
+        <Col md={showSidebar ? 9 : 12} className="content">
           <Routes>
-            <Route path="/" element={<HomePage />} />
+            {/* Default Route Logic */}
+            <Route path="/" element={isLoggedIn ? (
+              userRole === 'borrower' ? <BorrowerDashboard /> :
+              userRole === 'admin' ? <AdminDashboard /> :
+              <InvestorDashboard />
+            ) : (
+              <HomePage />
+            )} />
+
             <Route path="/signup" element={isLoggedIn ? <Navigate to="/" /> : <SignUp />} />
-            <Route path="/login" element={isLoggedIn ? <Navigate to="/" /> : <Login onLogin={() => setIsLoggedIn(true)} />} />
-            <Route path="/logout" element={<Logout onLogout={() => setIsLoggedIn(false)} />} />
+            <Route path="/login" element={isLoggedIn ? <Navigate to="/" /> : <Login onLogin={(role) => { setIsLoggedIn(true); setUserRole(role); }} />} />
+            <Route path="/logout" element={<Logout onLogout={() => { setIsLoggedIn(false); setUserRole(null); }} />} />
+
+            {/* Pitch List Routes */}
+            <Route path="/pitches" element={isLoggedIn ? (
+              userRole === 'admin' ? <PitchList showAllPitches={true} /> :
+              userRole === 'borrower' ? <PitchList showMyPitches={true} /> :
+              userRole === 'investor' ? <PitchList showInvestorPitches={true} /> :
+              <Navigate to="/" />
+            ) : <Navigate to="/login" />} />
+
+            <Route path="/add-pitch" element={userRole === 'borrower' ? <AddPitch /> : <Navigate to="/" />} />
+            <Route path="/update-pitch" element={userRole === 'borrower' ? <UpdatePitch /> : <Navigate to="/" />} />
+
+            {/* Catch-all for non-existent routes */}
+            <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </Col>
       </Row>

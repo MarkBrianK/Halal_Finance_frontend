@@ -1,17 +1,26 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import { Offcanvas, Nav, Button, Modal, Spinner } from "react-bootstrap";
-import { FaBars, FaTimes, FaHome, FaChartPie } from "react-icons/fa";
+import { FaBars, FaTimes, FaChartPie, FaClipboardList, FaPlusCircle } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 import logo from "../../Assets/Images/halal.jpeg";
-import styles from '../../Styles/sidebar.module.css'; // importing the CSS module
+import styles from '../../Styles/sidebar.module.css';
 
 function Sidebar() {
     const [isOpen, setIsOpen] = useState(false);
     const [showModal, setShowModal] = useState(false);
-    const [isLoading, setIsLoading] = useState(false)
+    const [isLoading, setIsLoading] = useState(false);
+    const navigate = useNavigate();
 
     const toggleSidebar = () => {
         setIsOpen((prev) => !prev);
+    };
+
+    const handleMouseEnter = () => {
+        setIsOpen(true);
+    };
+
+    const handleMouseLeave = () => {
+        setIsOpen(false);
     };
 
     const handleResize = () => {
@@ -23,7 +32,6 @@ function Sidebar() {
     useEffect(() => {
         window.addEventListener("resize", handleResize);
         handleResize();
-
         return () => {
             window.removeEventListener("resize", handleResize);
         };
@@ -36,16 +44,20 @@ function Sidebar() {
         setIsLoading(true);
         try {
             localStorage.removeItem('token');
-            // Simulate a delay for logout
             setTimeout(() => {
                 setIsLoading(false);
-                handleClose(); // Close the modal after logout
-                window.location.reload(); // Reload the page to reflect logout
-            }, 1000);  // Reload after 1 second
+                handleClose();
+                navigate('/login'); // Navigate to the login page after logout
+            }, 1000);
         } catch (error) {
             setIsLoading(false);
             alert('Failed to log out. Please try again.');
         }
+    };
+
+    const handleNavigation = (path) => {
+        navigate(path);
+        toggleSidebar();
     };
 
     return (
@@ -61,6 +73,8 @@ function Sidebar() {
             <Offcanvas
                 show={isOpen}
                 onHide={toggleSidebar}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
                 style={{
                     backgroundColor: '#343a40',
                     color: 'white',
@@ -75,11 +89,14 @@ function Sidebar() {
                 </Offcanvas.Header>
                 <Offcanvas.Body>
                     <Nav className="flex-column">
-                        <Nav.Link as={Link} to="/" className={styles.navlink}>
-                            <FaHome className={styles.icon} /> Home
-                        </Nav.Link>
-                        <Nav.Link as={Link} to="/dashboard" className={styles.navlink}>
+                        <Nav.Link onClick={() => handleNavigation('/borrower-dashboard')} className={styles.navlink}>
                             <FaChartPie className={styles.icon} /> Dashboard
+                        </Nav.Link>
+                        <Nav.Link onClick={() => handleNavigation('/add-pitch')} className={styles.navlink}>
+                            <FaPlusCircle className={styles.icon} /> Add Pitch
+                        </Nav.Link>
+                        <Nav.Link onClick={() => handleNavigation('/pitches')} className={styles.navlink}>
+                            <FaClipboardList className={styles.icon} /> Pitch List
                         </Nav.Link>
                         <Button
                             onClick={handleShow}
@@ -92,7 +109,6 @@ function Sidebar() {
                 </Offcanvas.Body>
             </Offcanvas>
 
-            {/* Modal for Logout Confirmation */}
             <Modal show={showModal} onHide={handleClose} centered>
                 <Modal.Header closeButton>
                     <Modal.Title>Confirm Logout</Modal.Title>
