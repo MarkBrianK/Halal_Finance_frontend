@@ -2,7 +2,7 @@
 
 /* Background and Text Colors */
 body {
-  background-color: white;
+  background: linear-gradient(180deg, black 50%, rgb(127, 110, 11) 100%); /* Linear gradient */
   color: black;
   font-family: 'Arial', sans-serif;
 }
@@ -98,4 +98,3 @@ footer {
 .bg-white {
   background-color: white;
 }
-

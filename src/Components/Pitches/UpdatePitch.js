@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Container, Form, Button, Row, Col, Card } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import { Container, Form, Button, Row, Col, Alert, Card } from "react-bootstrap";
 import { FaPaperPlane } from "react-icons/fa";
 import axios from 'axios';
+import {jwtDecode} from 'jwt-decode';
 
 const UpdatePitch = ({ pitch, setSelectedPitch }) => {
   const [title, setTitle] = useState(pitch.title || '');
@@ -9,6 +11,7 @@ const UpdatePitch = ({ pitch, setSelectedPitch }) => {
   const [amountRequested, setAmountRequested] = useState(pitch.amount_requested || 0);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (pitch) {
@@ -22,13 +25,20 @@ const UpdatePitch = ({ pitch, setSelectedPitch }) => {
     e.preventDefault();
 
     try {
+      // Decode the JWT to get the user ID (if needed for authorization)
+      const token = localStorage.getItem('token');
+      const decodedToken = jwtDecode(token);
+      const userId = decodedToken.sub;
+
       await axios.put(`http://127.0.0.1:3000/pitches/${pitch.id}`, {
         title,
         description,
         amount_requested: amountRequested,
+        user_id: userId // This is optional depending on your backend logic
       });
 
       setSuccess("Pitch successfully updated!");
+      navigate('/pitches');
       setError('');
 
       setSelectedPitch(null);
@@ -51,14 +61,14 @@ const UpdatePitch = ({ pitch, setSelectedPitch }) => {
             Update Pitch
           </h2>
 
-          {success && <p className="text-success text-center">{success}</p>}
-          {error && <p className="text-danger text-center">{error}</p>}
+          {success && <Alert variant="success">{success}</Alert>}
+          {error && <Alert variant="danger">{error}</Alert>}
 
-          <Form onSubmit={handleSubmit}>
+          <Form onSubmit={handleSubmit} style={{ backgroundColor: "white" }}>
             <Row>
               <Col md={6}>
                 <Form.Group controlId="formTitle">
-                  <Form.Label>Pitch Title</Form.Label>
+                  <Form.Label style={{ backgroundColor: "white", color: "grey", border: "none", fontWeight: "700" }}>Pitch Title</Form.Label>
                   <Form.Control
                     type="text"
                     placeholder="Enter pitch title"
@@ -71,7 +81,7 @@ const UpdatePitch = ({ pitch, setSelectedPitch }) => {
               </Col>
               <Col md={6}>
                 <Form.Group controlId="formAmountRequested">
-                  <Form.Label>Amount Requested (KSH)</Form.Label>
+                  <Form.Label style={{ backgroundColor: "white", color: "grey", border: "none", fontWeight: "700" }}>Amount Requested (KSH)</Form.Label>
                   <Form.Control
                     type="number"
                     placeholder="Enter amount"
@@ -84,7 +94,7 @@ const UpdatePitch = ({ pitch, setSelectedPitch }) => {
               </Col>
             </Row>
             <Form.Group controlId="formDescription" className="mt-3">
-              <Form.Label>Description</Form.Label>
+              <Form.Label style={{ backgroundColor: "white", color: "grey", border: "none", fontWeight: "700" }}>Description</Form.Label>
               <Form.Control
                 as="textarea"
                 rows={4}

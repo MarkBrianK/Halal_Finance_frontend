@@ -1,34 +1,43 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Container, Form, Button, Row, Col, Alert, Card } from "react-bootstrap";
 import { FaPaperPlane } from "react-icons/fa";
 import axios from 'axios';
+import {jwtDecode} from 'jwt-decode';
 
 const AddPitch = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [amountRequested, setAmountRequested] = useState(0);
-  const [status, setStatus] = useState("draft");
+  const [status, setStatus] = useState("pending");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      // Decode the JWT to get the user ID
+      const token = localStorage.getItem('token');
+      const decodedToken = jwtDecode(token);
+      const userId = decodedToken.sub;
+
       await axios.post('http://127.0.0.1:3000/pitches', {
         title,
         description,
         amount_requested: amountRequested,
         status,
-        user_id: 1
+        user_id: userId, // Use the decoded userId here
       });
 
       setSuccess("Pitch successfully added!");
+      navigate('/pitches');
       setError("");
 
       setTitle("");
       setDescription("");
       setAmountRequested(0);
-      setStatus("draft");
+      setStatus("pending");
     } catch (err) {
       setError("Error adding pitch. Please try again.");
       setSuccess("");
@@ -40,18 +49,18 @@ const AddPitch = () => {
     <Container className="p-4">
       <Card style={{ backgroundColor: "white", borderRadius: "8px", boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)" }}>
         <Card.Body>
-          <h2 className="text-center mb-4" style={{ color: "#c7a034", fontWeight: "bold" }}>
+          <h2 className="text-center mb-4" style={{ color: "grey", fontWeight: "bold" }}>
             Add a New Pitch
           </h2>
 
           {success && <Alert variant="success">{success}</Alert>}
           {error && <Alert variant="danger">{error}</Alert>}
 
-          <Form onSubmit={handleSubmit}>
+          <Form onSubmit={handleSubmit} style={{ backgroundColor: "white" }}>
             <Row>
               <Col md={6}>
                 <Form.Group controlId="formTitle">
-                  <Form.Label>Pitch Title</Form.Label>
+                  <Form.Label style={{ backgroundColor: "white", color: "grey", border: "none", fontWeight: "700" }}>Pitch Title</Form.Label>
                   <Form.Control
                     type="text"
                     placeholder="Enter pitch title"
@@ -64,7 +73,7 @@ const AddPitch = () => {
               </Col>
               <Col md={6}>
                 <Form.Group controlId="formAmountRequested">
-                  <Form.Label>Amount Requested (KSH)</Form.Label>
+                  <Form.Label style={{ backgroundColor: "white", color: "grey", border: "none", fontWeight: "700" }}>Amount Requested (KSH)</Form.Label>
                   <Form.Control
                     type="number"
                     placeholder="Enter amount"
@@ -77,7 +86,7 @@ const AddPitch = () => {
               </Col>
             </Row>
             <Form.Group controlId="formDescription" className="mt-3">
-              <Form.Label>Description</Form.Label>
+              <Form.Label style={{ backgroundColor: "white", color: "grey", border: "none", fontWeight: "700" }}>Description</Form.Label>
               <Form.Control
                 as="textarea"
                 rows={4}
