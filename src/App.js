@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate, useLocation } from 'react-router-dom';
 import { Container, Row, Col } from 'react-bootstrap';
 import SignUp from './Auth/signup';
 import Login from './Auth/login';
 import HomePage from './Components/Pages/HomePage';
-import NavBar from './Components/Layouts/Sidebar';
+import Sidebar from './Components/Layouts/Sidebar';
 import Logout from './Auth/logout';
 import BorrowerDashboard from './Components/Dashboard/BorrowerDashboard';
 import AdminDashboard from './Components/Dashboard/AdminDashboard';
@@ -12,62 +12,62 @@ import InvestorDashboard from './Components/Dashboard/InvestorDashboard';
 import PitchList from './Components/Pitches/PitchList';
 import AddPitch from './Components/Pitches/AddPitch';
 import UpdatePitch from './Components/Pitches/UpdatePitch';
+import { jwtDecode } from 'jwt-decode';
+import Footer from './Components/Layouts/Footer'; // Import the Footer component
 
 const App = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userId, setUserId] = useState(null);
+  const [isLoggedin, setIsLoggedIn] = useState(false);
+  const [showSidebar, setShowSidebar] = useState(false);
   const [userRole, setUserRole] = useState(null);
+  const location = useLocation(); // Get the current location
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    const role = localStorage.getItem('role');
-
     if (token) {
       setIsLoggedIn(true);
-      setUserRole(role);
+      try {
+        const decodedToken = jwtDecode(token);
+        const user = decodedToken.sub;
+        setUserId(user);
+        const role = localStorage.getItem('role');
+        setUserRole(role);
+      } catch (error) {
+        console.error('Error decoding token:', error);
+      }
     }
   }, []);
 
-  const showSidebar = isLoggedIn;
+  const handleSidebarToggle = () => setShowSidebar(!showSidebar);
 
   return (
     <Container fluid>
+      {isLoggedin && (
+        <Sidebar show={showSidebar} onHide={handleSidebarToggle} />
+      )}
+
       <Row>
-        {showSidebar && (
-          <Col md={3} className="sidebar">
-            <NavBar />
-          </Col>
-        )}
-        <Col md={showSidebar ? 9 : 12} className="content">
+        <Col className="content">
           <Routes>
-            {/* Default Route Logic */}
-            <Route path="/" element={isLoggedIn ? (
-              userRole === 'borrower' ? <BorrowerDashboard /> :
-              userRole === 'admin' ? <AdminDashboard /> :
-              <InvestorDashboard />
-            ) : (
-              <HomePage />
-            )} />
+            <Route path="/" element={<HomePage isLoggedIn={isLoggedin} />} />
+            <Route path="/signup" element={!isLoggedin ? <SignUp /> : <Navigate to="/" />} />
+            <Route path="/login" element={!isLoggedin ? <Login /> : <Navigate to={`/${userRole}-dashboard`} />} />
+            <Route path="/logout" element={<Logout />} />
 
-            <Route path="/signup" element={isLoggedIn ? <Navigate to="/" /> : <SignUp />} />
-            <Route path="/login" element={isLoggedIn ? <Navigate to="/" /> : <Login onLogin={(role) => { setIsLoggedIn(true); setUserRole(role); }} />} />
-            <Route path="/logout" element={<Logout onLogout={() => { setIsLoggedIn(false); setUserRole(null); }} />} />
-
-            {/* Pitch List Routes */}
-            <Route path="/pitches" element={isLoggedIn ? (
-              userRole === 'admin' ? <PitchList showAllPitches={true} /> :
-              userRole === 'borrower' ? <PitchList showMyPitches={true} /> :
-              userRole === 'investor' ? <PitchList showInvestorPitches={true} /> :
-              <Navigate to="/" />
-            ) : <Navigate to="/login" />} />
-
-            <Route path="/add-pitch" element={userRole === 'borrower' ? <AddPitch /> : <Navigate to="/" />} />
-            <Route path="/update-pitch" element={userRole === 'borrower' ? <UpdatePitch /> : <Navigate to="/" />} />
-
-            {/* Catch-all for non-existent routes */}
-            <Route path="*" element={<Navigate to="/" />} />
+            {isLoggedin && (
+              <>
+                <Route path="/borrower-dashboard" element={<BorrowerDashboard />} />
+                <Route path="/admin-dashboard" element={<AdminDashboard />} />
+                <Route path="/investor-dashboard" element={<InvestorDashboard />} />
+                <Route path="/pitches" element={<PitchList userId={userId} />} />
+                <Route path="/add-pitch" element={<AddPitch />} />
+                <Route path="/update-pitch" element={<UpdatePitch />} />
+              </>
+            )}
           </Routes>
         </Col>
       </Row>
+      {location.pathname !== '/login' && location.pathname !== '/signup' && <Footer />}
     </Container>
   );
 };
