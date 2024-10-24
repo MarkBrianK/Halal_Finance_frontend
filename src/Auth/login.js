@@ -3,7 +3,7 @@ import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 
-function Login({ onLogin }) {
+function Login() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
@@ -13,19 +13,22 @@ function Login({ onLogin }) {
     axios.post('http://localhost:3000/users/sign_in', { user: formData })
       .then(response => {
         localStorage.setItem('token', response.data.token);
-        const role = response.data.role;  // Get the role from the response
-        localStorage.setItem('role', role);
-        onLogin(role);
+        const userRole = response.data.role; // Assuming role is returned in the response
+        localStorage.setItem('role', userRole);
+        window.location.reload()
 
-        // Navigate based on the user's role
-        if (role === 'admin') {
-          navigate('/admin-dashboard');
-        } else if (role === 'borrower') {
-          navigate('/borrower-dashboard');
-        } else if (role === 'investor') {
-          navigate('/investor-dashboard');
-        } else {
-          navigate("/"); // Default navigation
+        switch (userRole) {
+          case 'admin':
+            navigate('/admin-dashboard');
+            break;
+          case 'borrower':
+            navigate('/borrower-dashboard');
+            break;
+          case 'investor':
+            navigate('/investor-dashboard');
+            break;
+          default:
+            navigate('/');
         }
       })
       .catch(error => {
@@ -35,26 +38,26 @@ function Login({ onLogin }) {
 
   return (
     <div className="signin">
-      <Container fluid className="d-flex align-items-center justify-content-center" style={{ minHeight: '100vh', backgroundColor: '#f9f9f9' }}>
+      <Container fluid className="d-flex align-items-center justify-content-center" style={{ minHeight: '100vh', background: 'linear-gradient(90deg, black 0%, rgb(127, 110, 11) 100%)' }}>
         <Row className="w-100">
           <Col xs={12} md={6} lg={5} className="mx-auto">
             <div className="form p-4 shadow-sm rounded" style={{ backgroundColor: '#fff' }}>
-              <h2 className="text-center" style={{ color: '#c7a034', fontFamily: "'Roboto', sans-serif", fontWeight: '600' }}>Login</h2>
+              <h2 className="text-center" style={{ color: 'grey', fontFamily: "'Roboto', sans-serif", fontWeight: '600' }}>Login</h2>
               {error && <div className="alert alert-danger">{error}</div>}
               <Form onSubmit={handleSubmit} className="mt-3">
                 <Form.Group controlId="formEmail">
-                  <Form.Label className="formlabel" style={{ color: 'white' }}>Email address</Form.Label>
+                  <Form.Label className="formlabel" style={{ color: 'white',border:"none" }}>Email address</Form.Label>
                   <Form.Control
                     type="email"
                     placeholder="Enter email"
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className={`mb-3 ${error ? 'is-invalid' : ''}`} // Visual feedback on error
+                    className={`mb-3 ${error ? 'is-invalid' : ''}`}
                     style={{ borderRadius: '4px', borderColor: error ? '#e3342f' : '#ccc' }}
                   />
                 </Form.Group>
                 <Form.Group controlId="formPassword">
-                  <Form.Label className="formlabel" style={{ color: 'white' }}>Password</Form.Label>
+                  <Form.Label className="formlabel" style={{ color: 'white',border:"none" }}>Password</Form.Label>
                   <Form.Control
                     type="password"
                     placeholder="Password"
