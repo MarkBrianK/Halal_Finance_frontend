@@ -33,27 +33,27 @@ function SignUp() {
 
   return (
     <div className="signin">
-      <Container fluid className="d-flex align-items-center justify-content-center" style={{ minHeight: '100vh', backgroundColor: '#f9f9f9' }}>
+      <Container fluid className="d-flex align-items-center justify-content-center" style={{ minHeight: '100vh', background: 'linear-gradient(90deg, black 0%, rgb(127, 110, 11) 100%)' }}>
         <Row className="w-100">
           <Col xs={12} md={6} lg={5} className="mx-auto">
-            <div className="form p-4 shadow-sm rounded" style={{ backgroundColor: '#fff' }}>
-              <h2 className="text-center" style={{ color: '#c7a034', fontFamily: "'Roboto', sans-serif", fontWeight: '600' }}>Sign Up</h2>
+            <div className="form p-4 shadow-sm rounded" style={{ backgroundColor: 'rgba(255, 255, 255, 0.9)' }}>
+              <h2 className="text-center" style={{ color: 'grey', fontFamily: "'Roboto', sans-serif", fontWeight: '600' }}>Sign Up</h2>
               {error && <div className="alert alert-danger">{error}</div>}
               <Form onSubmit={handleSubmit} className="mt-3">
                 <Form.Group controlId="formEmail">
-                  <Form.Label className="formlabel" style={{ color: 'white' }}>Email address</Form.Label>
+                  <Form.Label className="formlabel" style={{ color: 'white',border:"none" }}>Email address</Form.Label>
                   <Form.Control
                     type="email"
                     placeholder="Enter email"
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className={`mb-3 ${error ? 'is-invalid' : ''}`} // Visual feedback on error
+                    className={`mb-3 ${error ? 'is-invalid' : ''}`} 
                     style={{ borderRadius: '4px', borderColor: error ? '#e3342f' : '#ccc' }}
                   />
                 </Form.Group>
 
                 <Form.Group controlId="formRole">
-                  <Form.Label className="formlabel" style={{ color: 'white' }}>Select Role</Form.Label>
+                  <Form.Label className="formlabel" style={{ color: 'white',border:"none" }}>Select Role</Form.Label>
                   <Form.Select
                     value={formData.role}
                     onChange={(e) => setFormData({ ...formData, role: e.target.value })}
@@ -66,7 +66,7 @@ function SignUp() {
                 </Form.Group>
 
                 <Form.Group controlId="formPassword">
-                  <Form.Label className="formlabel" style={{ color: 'white' }}>Password</Form.Label>
+                  <Form.Label className="formlabel" style={{ color: 'white',border:"none" }}>Password</Form.Label>
                   <Form.Control
                     type="password"
                     placeholder="Password"
@@ -78,7 +78,7 @@ function SignUp() {
                 </Form.Group>
 
                 <Form.Group controlId="formPasswordConfirm">
-                  <Form.Label className="formlabel" style={{ color: 'white' }}>Confirm Password</Form.Label>
+                  <Form.Label className="formlabel" style={{ color: 'white',border:"none" }}>Confirm Password</Form.Label>
                   <Form.Control
                     type="password"
                     placeholder="Confirm Password"
