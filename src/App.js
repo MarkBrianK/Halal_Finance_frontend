@@ -56,7 +56,7 @@ const App = () => {
 
             {isLoggedin && (
               <>
-                <Route path="/borrower-dashboard" element={<BorrowerDashboard />} />
+                <Route path="/borrower-dashboard" element={<BorrowerDashboard userId={userId}/>} />
                 <Route path="/admin-dashboard" element={<AdminDashboard />} />
                 <Route path="/investor-dashboard" element={<InvestorDashboard />} />
                 <Route path="/pitches" element={<PitchList userId={userId} />} />

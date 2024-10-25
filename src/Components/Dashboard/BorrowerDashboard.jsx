@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Container, Row, Col, Card, Button, Table, Alert } from "react-bootstrap";
 import { FaMoneyBillAlt, FaClipboardCheck, FaHistory, FaUserEdit, FaWallet, FaBoxOpen } from "react-icons/fa";
-import axios from 'axios';
+import axios from "../utilis/axiosConfig"
 
-const BorrowerDashboard = () => {
+const BorrowerDashboard = ({ userId }) => {
     const [loans, setLoans] = useState([]);
     const [paymentHistory, setPaymentHistory] = useState([]);
     const [wallet, setWallet] = useState({});
@@ -14,26 +14,20 @@ const BorrowerDashboard = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                // Fetch Loans
-                const loansResponse = await axios.get('http://127.0.0.1:3000/loans');
+                const loansResponse = await axios.get('/loans');
                 setLoans(loansResponse.data);
 
-                // Fetch Payments
-                const paymentsResponse = await axios.get('http://127.0.0.1:3000/payments');
+                const paymentsResponse = await axios.get('/payments');
                 setPaymentHistory(paymentsResponse.data);
 
-                // Fetch Wallet Data
-                const walletResponse = await axios.get('http://127.0.0.1:3000/wallets');
+                const walletResponse = await axios.get(`/wallets/${userId}`);
                 setWallet(walletResponse.data);
 
-                // Fetch Transactions
-                const transactionsResponse = await axios.get('http://127.0.0.1:3000/transactions');
+                const transactionsResponse = await axios.get('/transactions');
                 setTransactions(transactionsResponse.data);
 
-                // Fetch Orders
-                const ordersResponse = await axios.get('http://127.0.0.1:3000/orders');
+                const ordersResponse = await axios.get('/orders');
                 setOrders(ordersResponse.data);
-
             } catch (err) {
                 setError('Error fetching data. Please try again later.');
                 console.error(err);
@@ -41,11 +35,10 @@ const BorrowerDashboard = () => {
         };
 
         fetchData();
-    }, []);
-
+    }, [userId]);
     return (
         <Container fluid className="p-4">
-            <h2 className="text-center" style={{ color: "grey", fontWeight: "bold" }}>
+            <h2 className="text-center" style={{ color: "white", fontWeight: "bold" }}>
                 Dashboard
             </h2>
             {error && <Alert variant="danger">{error}</Alert>}
@@ -167,7 +160,7 @@ const BorrowerDashboard = () => {
                                     <td>{order.id}</td>
                                     <td>{order.product_name}</td>
                                     <td>{order.quantity}</td>
-                                    <td>${order.total_price}</td>
+                                    <td>Ksh {order.total_price}</td>
                                     <td>{order.status}</td>
                                 </tr>
                             ))}
