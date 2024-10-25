@@ -15,23 +15,23 @@ const BorrowerDashboard = () => {
         const fetchData = async () => {
             try {
                 // Fetch Loans
-                const loansResponse = await axios.get('http://127.0.0.1:3000/loans'); // Replace with your API endpoint
+                const loansResponse = await axios.get('http://127.0.0.1:3000/loans');
                 setLoans(loansResponse.data);
 
                 // Fetch Payments
-                const paymentsResponse = await axios.get('http://127.0.0.1:3000/payments'); // Replace with your API endpoint
+                const paymentsResponse = await axios.get('http://127.0.0.1:3000/payments');
                 setPaymentHistory(paymentsResponse.data);
 
                 // Fetch Wallet Data
-                const walletResponse = await axios.get('http://127.0.0.1:3000/wallet'); // Replace with your API endpoint
+                const walletResponse = await axios.get('http://127.0.0.1:3000/wallets');
                 setWallet(walletResponse.data);
 
                 // Fetch Transactions
-                const transactionsResponse = await axios.get('http://127.0.0.1:3000/transactions'); // Replace with your API endpoint
+                const transactionsResponse = await axios.get('http://127.0.0.1:3000/transactions');
                 setTransactions(transactionsResponse.data);
 
                 // Fetch Orders
-                const ordersResponse = await axios.get('http://127.0.0.1:3000/orders'); // Replace with your API endpoint
+                const ordersResponse = await axios.get('http://127.0.0.1:3000/orders');
                 setOrders(ordersResponse.data);
 
             } catch (err) {
@@ -79,7 +79,7 @@ const BorrowerDashboard = () => {
                             <Card.Title>
                                 <FaWallet className="me-2" /> Wallet Balance
                             </Card.Title>
-                            <Card.Text>${wallet.balance || 0}</Card.Text>
+                            <Card.Text>Ksh {wallet && wallet.balance ? wallet.balance : 0}</Card.Text>
                         </Card.Body>
                     </Card>
                 </Col>
