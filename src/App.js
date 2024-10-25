@@ -19,7 +19,6 @@ import AddProduct from './Components/Pages/AddProductPage';
 const App = () => {
   const [userId, setUserId] = useState(null);
   const [isLoggedin, setIsLoggedIn] = useState(false);
-  const [showSidebar, setShowSidebar] = useState(false);
   const [userRole, setUserRole] = useState(null);
   const location = useLocation(); // Get the current location
 
@@ -39,12 +38,13 @@ const App = () => {
     }
   }, []);
 
-  const handleSidebarToggle = () => setShowSidebar(!showSidebar);
-
   return (
     <Container fluid>
+      {/* Conditionally render the Sidebar only when logged in */}
       {isLoggedin && (
-        <Sidebar show={showSidebar} onHide={handleSidebarToggle} />
+        <div style={{ position: 'absolute', top: '20px', right: '20px', zIndex: 1050 }}>
+          <Sidebar />
+        </div>
       )}
 
       <Row>
@@ -54,7 +54,7 @@ const App = () => {
             <Route path="/signup" element={!isLoggedin ? <SignUp /> : <Navigate to="/" />} />
             <Route path="/login" element={!isLoggedin ? <Login /> : <Navigate to={`/${userRole}-dashboard`} />} />
             <Route path="/logout" element={<Logout />} />
-            <Route path = "/add-product" element={<AddProduct />} />
+            <Route path="/add-product" element={<AddProduct />} />
 
             {isLoggedin && (
               <>

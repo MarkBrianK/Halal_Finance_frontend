@@ -2,7 +2,7 @@
 
 /* Background and Text Colors */
 body {
-  background: linear-gradient(180deg, black 50%, rgb(127, 110, 11) 100%); /* Linear gradient */
+  background: linear-gradient(90deg, black -10%, rgb(127, 110, 11) 100%);
   color: black;
   font-family: 'Arial', sans-serif;
 }

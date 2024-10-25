@@ -15,21 +15,7 @@ function Login() {
         localStorage.setItem('token', response.data.token);
         const userRole = response.data.role; // Assuming role is returned in the response
         localStorage.setItem('role', userRole);
-        window.location.reload()
-
-        switch (userRole) {
-          case 'admin':
-            navigate('/admin-dashboard');
-            break;
-          case 'borrower':
-            navigate('/borrower-dashboard');
-            break;
-          case 'investor':
-            navigate('/investor-dashboard');
-            break;
-          default:
-            navigate('/');
-        }
+        navigate('/')
       })
       .catch(error => {
         setError(error.response?.data.error || 'Something went wrong');

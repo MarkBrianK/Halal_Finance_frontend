@@ -80,7 +80,7 @@ const BorrowerDashboard = ({ userId }) => {
 
             <Row className="mb-4">
                 <Col md={6}>
-                    <h4>
+                    <h4 style={{color:"white"}}>
                         <FaClipboardCheck className="me-2" />
                         Current Loan Applications
                     </h4>
@@ -111,7 +111,7 @@ const BorrowerDashboard = ({ userId }) => {
                 </Col>
 
                 <Col md={6}>
-                    <h4>
+                    <h4 style={{color:"white"}}>
                         <FaHistory className="me-2" />
                         Payment History
                     </h4>
@@ -140,7 +140,7 @@ const BorrowerDashboard = ({ userId }) => {
 
             <Row className="mb-4">
                 <Col>
-                    <h4>
+                    <h4 style={{color:"white"}}>
                         <FaBoxOpen className="me-2" />
                         Recent Orders
                     </h4>
@@ -171,7 +171,7 @@ const BorrowerDashboard = ({ userId }) => {
 
             <Row className="mb-4">
                 <Col>
-                    <h4>
+                    <h4 style={{color:"white"}}>
                         <FaHistory className="me-2" />
                         Transaction History
                     </h4>

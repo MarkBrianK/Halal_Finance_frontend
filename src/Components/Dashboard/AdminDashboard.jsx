@@ -4,7 +4,6 @@ import { Container, Row, Col, Card, Button, Table } from "react-bootstrap";
 import { FaUsers, FaClipboardCheck, FaChartBar } from "react-icons/fa";
 
 const AdminDashboard = () => {
-  // Sample data
   const users = [
     { id: 1, name: "John Doe", role: "Borrower", status: "Active" },
     { id: 2, name: "Jane Smith", role: "Investor", status: "Active" },
