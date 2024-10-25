@@ -1,6 +1,6 @@
 import React from 'react';
 import { Row, Col, Button } from 'react-bootstrap';
-import { FaHandshake, FaBullhorn, FaRegNewspaper } from 'react-icons/fa';
+import { FaHandshake, FaBullhorn, FaRegNewspaper, FaShoppingCart } from 'react-icons/fa'; // Import FaShoppingCart icon
 import { useNavigate } from 'react-router-dom';
 import logo from '../../Assets/Images/halal_logo.jpeg';
 import heroImage from '../../Assets/Images/invest.jpg';
@@ -68,32 +68,38 @@ const HomePage = ({ isLoggedIn }) => {
 
             {/* Services Section */}
             <div className="mt-5 px-0">
-                <h2 className="text-center text-black" style={{ fontWeight: '600', fontSize: '2rem' }}>Our Core Services</h2>
+                <h2 className="text-center text-white" style={{ fontWeight: '600', fontSize: '2rem' }}>Our Core Services</h2>
                 <Row className="mx-0">
-                    <Col md={4}>
+                    <Col md={3}>
                         <div className="text-center p-4 border rounded shadow-sm bg-white text-black">
                             <FaHandshake size={50} className="text-gold" />
                             <h4 style={{ fontWeight: '500', marginTop: '15px' }}>Business Pitch Submissions</h4>
                             <p>Submit your business pitch to receive funding tailored to your needs, aligned with our halal principles.</p>
                         </div>
                     </Col>
-                    <Col md={4}>
+                    <Col md={3}>
                         <div className="text-center p-4 border rounded shadow-sm bg-white text-black">
                             <FaBullhorn size={50} className="text-gold" />
                             <h4 style={{ fontWeight: '500', marginTop: '15px' }}>Sharia-compliant Loans</h4>
                             <p>Get access to loan services designed for your projects, fully compliant with Islamic principles.</p>
                         </div>
                     </Col>
-                    <Col md={4}>
+                    <Col md={3}>
                         <div className="text-center p-4 border rounded shadow-sm bg-white text-black">
                             <FaRegNewspaper size={50} className="text-gold" />
                             <h4 style={{ fontWeight: '500', marginTop: '15px' }}>Investment Insights</h4>
                             <p>Stay updated with our expert insights and make informed decisions on investment opportunities.</p>
                         </div>
                     </Col>
+                    <Col md={3}>
+                        <div className="text-center p-4 border rounded shadow-sm bg-white text-black">
+                            <FaShoppingCart size={50} className="text-gold" /> {/* Added Corporate Shopping icon */}
+                            <h4 style={{ fontWeight: '500', marginTop: '15px' }}>Corporate Shopping</h4>
+                            <p>Access our corporate shopping services for exclusive business deals and bulk purchasing options.</p>
+                        </div>
+                    </Col>
                 </Row>
             </div>
-
         </div>
     );
 };
