@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Container, Form, Button, Row, Col, Alert, Card } from "react-bootstrap";
 import { FaPaperPlane } from "react-icons/fa";
-import axios from 'axios';
-import {jwtDecode} from 'jwt-decode';
+import axios from '../utilis/axiosConfig';
 
 const AddPitch = () => {
   const [title, setTitle] = useState("");
@@ -17,17 +16,14 @@ const AddPitch = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Decode the JWT to get the user ID
-      const token = localStorage.getItem('token');
-      const decodedToken = jwtDecode(token);
-      const userId = decodedToken.sub;
+
 
       await axios.post('http://127.0.0.1:3000/pitches', {
         title,
         description,
         amount_requested: amountRequested,
         status,
-        user_id: userId, // Use the decoded userId here
+
       });
 
       setSuccess("Pitch successfully added!");

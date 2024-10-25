@@ -1,106 +1,96 @@
-import React from 'react';
-import { Row, Col, Button } from 'react-bootstrap';
-import { FaHandshake, FaBullhorn, FaRegNewspaper, FaShoppingCart } from 'react-icons/fa'; // Import FaShoppingCart icon
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Row, Col, Container, Carousel as BootstrapCarousel, Card, Button } from 'react-bootstrap';
 import logo from '../../Assets/Images/halal_logo.jpeg';
-import heroImage from '../../Assets/Images/invest.jpg';
-
+import axios from '../utilis/axiosConfig';
+import { Image } from 'cloudinary-react';
 
 const HomePage = ({ isLoggedIn }) => {
-    const navigate = useNavigate();
+    const [products, setProducts] = useState([]);
 
-    const handleGetStarted = () => {
-        // Navigate to dashboard if logged in, otherwise go to login
-        if (isLoggedIn) {
-            navigate('/dashboard');  // Adjust this to the correct dashboard route
-        } else {
-            navigate('/login');
-        }
-    };
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                const response = await axios.get('http://localhost:3000/products');
+                setProducts(response.data);
+                console.log(response.data);
+            } catch (error) {
+                console.error('Error fetching products:', error);
+            }
+        };
 
-    const handleSubmitPitch = () => {
-        navigate('/add-pitch');
-    };
+        fetchProducts();
+    }, []);
 
     return (
-        <div style={{
-            background: 'linear-gradient(180deg, white 10%, black 50%, rgb(127, 110, 11) 100%)', // Linear gradient for the main background
-            minHeight: '100vh', // Ensure it covers the full height
-            color: 'black'
-        }}>
-            {/* Header Section */}
-            <div style={{ padding: '20px 0' }}>
-                <Row className="align-items-center justify-content-between mx-0">
-                    <Col xs={12} md={6} className="d-flex justify-content-center justify-content-md-start mb-3 mb-md-0">
-                        <img src={logo} alt="Company Logo" style={{ maxWidth: '150px', height: 'auto' }} />
-                    </Col>
-                    <Col xs={12} md={6} className="d-flex justify-content-center justify-content-md-end">
-                        <Button className="btn" onClick={handleGetStarted}>
-                            Get Started
-                        </Button>
-                    </Col>
-                </Row>
+        <Container fluid style={{ backgroundColor: '#f8f9fa', padding: '20px 0' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', padding: '20px' }}>
+                <img src={logo} alt="Company Logo" style={{ maxWidth: '150px', height: 'auto' }} />
+                {!isLoggedIn && (
+                    <Button variant="primary" style={{ height: '40px', alignSelf: 'center' }}>Login</Button>
+                )}
             </div>
 
-            {/* Hero Section */}
-            <div style={{ minHeight: '70vh', display: 'flex', alignItems: 'center', backgroundColor: 'white' }}>
-                <Row className="align-items-center mx-0">
-                    {/* Image Column */}
-                    <Col xs={12} md={6} className="d-flex justify-content-center mb-4 mb-md-0">
-                        <img src={heroImage} alt="Hero" style={{ maxWidth: '100%', height: 'auto', borderRadius: '10px' }} />
-                    </Col>
-
-                    {/* Text Content Column */}
-                    <Col xs={12} md={6}>
-                        <h1 className="text-black" style={{ fontSize: '2.5rem', marginBottom: '1rem', fontWeight: '600' }}>
-                            Financing Tailored for Your Business
-                        </h1>
-                        <p style={{ fontSize: '1.15rem', color: '#555', lineHeight: '1.6' }}>
-                            At Halal Finance Investment, we believe in supporting entrepreneurs and small businesses with Sharia-compliant loan solutions.
-                            Pitch your business idea, and let us help you turn your vision into reality with tailored financing.
-                        </p>
-                        <Button className="btn" onClick={handleSubmitPitch}>
-                            Submit Your Pitch
-                        </Button>
-                    </Col>
+            {products.length > 0 && (
+                <Row className="justify-content-center">
+                    {products.map((product) => (
+                        <Col xs={12} sm={6} md={4} lg={3} key={product.id} className="mb-4">
+                            <Card
+                                className="text-center"
+                                style={{
+                                    background: '#2c2c2c', // Darker background for card
+                                    color: 'white',
+                                    borderRadius: '15px',
+                                    transition: 'transform 0.3s, box-shadow 0.3s',
+                                    cursor: 'pointer',
+                                    boxShadow: '0 4px 10px rgba(0, 0, 0, 0.3)',
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.transform = 'scale(1.05)';
+                                    e.currentTarget.style.boxShadow = '0 8px 20px rgba(0, 0, 0, 0.5)';
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.transform = 'scale(1)';
+                                    e.currentTarget.style.boxShadow = '0 4px 10px rgba(0, 0, 0, 0.3)';
+                                }}
+                            >
+                                {Array.isArray(product.product_images) && product.product_images.length > 0 ? (
+                                    <BootstrapCarousel>
+                                        {product.product_images.map((imgObj, index) => (
+                                            <BootstrapCarousel.Item key={index}>
+                                                <Image
+                                                    cloudName="djmvocl1y"
+                                                    publicId={imgObj.image}
+                                                    alt={`Image of ${product.name}`}
+                                                    className="carousel-image"
+                                                    loading="lazy"
+                                                    style={{ objectFit: 'contain', height: '300px', width: '100%' }}
+                                                />
+                                            </BootstrapCarousel.Item>
+                                        ))}
+                                    </BootstrapCarousel>
+                                ) : (
+                                    <Card.Img
+                                        variant="top"
+                                        src="https://via.placeholder.com/300"
+                                        alt={`Image of ${product.name}`}
+                                        style={{ objectFit: 'contain', height: '300px', borderRadius: '15px 15px 0 0' }}
+                                    />
+                                )}
+                                <Card.Body>
+                                    <Card.Title>{product.name}</Card.Title>
+                                    <Card.Text>
+                                        {product.description}
+                                    </Card.Text>
+                                    <Card.Footer style={{ backgroundColor: 'black', color: 'white' }}>
+                                        <small>{`Price: Ksh ${product.price}`}</small>
+                                    </Card.Footer>
+                                </Card.Body>
+                            </Card>
+                        </Col>
+                    ))}
                 </Row>
-            </div>
-
-            {/* Services Section */}
-            <div className="mt-5 px-0">
-                <h2 className="text-center text-white" style={{ fontWeight: '600', fontSize: '2rem' }}>Our Core Services</h2>
-                <Row className="mx-0">
-                    <Col md={3}>
-                        <div className="text-center p-4 border rounded shadow-sm bg-white text-black">
-                            <FaHandshake size={50} className="text-gold" />
-                            <h4 style={{ fontWeight: '500', marginTop: '15px' }}>Business Pitch Submissions</h4>
-                            <p>Submit your business pitch to receive funding tailored to your needs, aligned with our halal principles.</p>
-                        </div>
-                    </Col>
-                    <Col md={3}>
-                        <div className="text-center p-4 border rounded shadow-sm bg-white text-black">
-                            <FaBullhorn size={50} className="text-gold" />
-                            <h4 style={{ fontWeight: '500', marginTop: '15px' }}>Sharia-compliant Loans</h4>
-                            <p>Get access to loan services designed for your projects, fully compliant with Islamic principles.</p>
-                        </div>
-                    </Col>
-                    <Col md={3}>
-                        <div className="text-center p-4 border rounded shadow-sm bg-white text-black">
-                            <FaRegNewspaper size={50} className="text-gold" />
-                            <h4 style={{ fontWeight: '500', marginTop: '15px' }}>Investment Insights</h4>
-                            <p>Stay updated with our expert insights and make informed decisions on investment opportunities.</p>
-                        </div>
-                    </Col>
-                    <Col md={3}>
-                        <div className="text-center p-4 border rounded shadow-sm bg-white text-black">
-                            <FaShoppingCart size={50} className="text-gold" /> {/* Added Corporate Shopping icon */}
-                            <h4 style={{ fontWeight: '500', marginTop: '15px' }}>Corporate Shopping</h4>
-                            <p>Access our corporate shopping services for exclusive business deals and bulk purchasing options.</p>
-                        </div>
-                    </Col>
-                </Row>
-            </div>
-        </div>
+            )}
+        </Container>
     );
 };
 

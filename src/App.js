@@ -13,7 +13,8 @@ import PitchList from './Components/Pitches/PitchList';
 import AddPitch from './Components/Pitches/AddPitch';
 import UpdatePitch from './Components/Pitches/UpdatePitch';
 import { jwtDecode } from 'jwt-decode';
-import Footer from './Components/Layouts/Footer'; // Import the Footer component
+import Footer from './Components/Layouts/Footer';
+import AddProduct from './Components/Pages/AddProductPage';
 
 const App = () => {
   const [userId, setUserId] = useState(null);
@@ -53,6 +54,7 @@ const App = () => {
             <Route path="/signup" element={!isLoggedin ? <SignUp /> : <Navigate to="/" />} />
             <Route path="/login" element={!isLoggedin ? <Login /> : <Navigate to={`/${userRole}-dashboard`} />} />
             <Route path="/logout" element={<Logout />} />
+            <Route path = "/add-product" element={<AddProduct />} />
 
             {isLoggedin && (
               <>

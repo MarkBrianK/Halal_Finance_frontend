@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Container, Form, Button, Row, Col, Alert, Card } from "react-bootstrap";
 import { FaPaperPlane } from "react-icons/fa";
-import axios from 'axios';
+import axios from '../utilis/axiosConfig';
 import {jwtDecode} from 'jwt-decode';
 
 const UpdatePitch = ({ pitch, setSelectedPitch }) => {

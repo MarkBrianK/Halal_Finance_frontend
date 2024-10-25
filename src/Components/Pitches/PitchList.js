@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Table, Alert, Button } from 'react-bootstrap';
-import axios from 'axios';
+import axios from '../utilis/axiosConfig';
 import UpdatePitch from './UpdatePitch';
 import { FaCheckCircle, FaClock, FaTimesCircle, FaEdit } from 'react-icons/fa';
 
@@ -15,7 +15,7 @@ const PitchList = ({ showAllPitches, showMyPitches, showInvestorPitches, userId 
       try {
         const response = await axios.get('http://127.0.0.1:3000/pitches');
         setPitches(response.data);
-        setFilteredPitches(response.data); // Initially set all pitches
+        setFilteredPitches(response.data);
       } catch (err) {
         setError('Error fetching pitches. Please try again later.');
       }
