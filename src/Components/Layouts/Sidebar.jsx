@@ -119,8 +119,12 @@ function Sidebar({ navLinks = [] }) {
                 </Offcanvas.Header>
                 <Offcanvas.Body>
                     <Nav className="flex-column">
-                        {/* Conditional Dashboard Link based on userRole */}
+
+                        <Nav.Link onClick={() => handleNavigation('/')} className={styles.navlink}>
+                            <FaHome /> Home
+                        </Nav.Link>
                         {userRole && (
+
                             <Nav.Link
                                 onClick={() => handleNavigation(dashboardLink()?.path)}
                                 className={styles.navlink}
@@ -130,9 +134,7 @@ function Sidebar({ navLinks = [] }) {
                         )}
 
                         {/* Static Links */}
-                        <Nav.Link onClick={() => handleNavigation('/')} className={styles.navlink}>
-                            <FaHome /> Home
-                        </Nav.Link>
+
 
                         {/* Role-specific or General Links */}
                         <Nav.Link onClick={() => handleNavigation('/pitches')} className={styles.navlink}>
