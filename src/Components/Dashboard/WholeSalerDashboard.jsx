@@ -1,9 +1,12 @@
-// src/Components/Dashboard/InvestorDashboard.js
+// src/Components/Dashboard/WholeSalerDashboard.js
 import React from "react";
-import { Container, Row, Col, Card, Table } from "react-bootstrap";
+import { Container, Row, Col, Card, Table, Button } from "react-bootstrap";
 import { FaMoneyCheckAlt, FaClipboardList, FaChartLine } from "react-icons/fa";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 const WholeSalerDashboard = () => {
+  const navigate = useNavigate(); // Initialize useNavigate
+
   // Sample data
   const investments = [
     { id: 1, borrower: "John Doe", amount: 5000, status: "Invested" },
@@ -15,11 +18,29 @@ const WholeSalerDashboard = () => {
     { id: 2, date: "2024-02-20", amount: 100, status: "Pending" },
   ];
 
+  const handleAddProduct = () => {
+    navigate('/add-product'); // Navigate to Add Product page
+  };
+
   return (
     <Container fluid className="p-4">
       <h2 className="text-center" style={{ color: "#c7a034" }}>
-        Investor Dashboard
+        Wholesaler Dashboard
       </h2>
+
+      {/* Add Product Button */}
+      <Row className="mb-4">
+        <Col className="text-end">
+          <Button
+            variant="success"
+            onClick={handleAddProduct}
+            style={{ marginBottom: '20px' }}
+          >
+            Add Product
+          </Button>
+        </Col>
+      </Row>
+
       <Row className="mb-4">
         <Col md={4}>
           <Card className="shadow-sm">
