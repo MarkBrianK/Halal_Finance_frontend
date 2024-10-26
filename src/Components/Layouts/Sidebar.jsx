@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Offcanvas, Nav, Modal, Spinner } from "react-bootstrap";
-import { FaBars, FaSignOutAlt, FaHome, FaUsers, FaClipboardList, FaPlus } from "react-icons/fa";
+import { FaBars, FaSignOutAlt, FaHome, FaUsers, FaClipboardList } from "react-icons/fa";
 import { useNavigate, useLocation } from "react-router-dom";
 import logo from "../../Assets/Images/halal_logo.jpeg";
 import styles from '../../Styles/sidebar.module.css';
@@ -11,7 +11,7 @@ function Sidebar() {
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
     const location = useLocation();
-    const [userRole, setUserRole] = useState('');
+
 
     const toggleSidebar = () => {
         setIsOpen((prev) => !prev);
@@ -37,11 +37,6 @@ function Sidebar() {
 
         if (location.pathname !== '/login') {
             setIsOpen(true);
-        }
-
-        const role = localStorage.getItem('role');
-        if (role) {
-            setUserRole(role);
         }
 
         return () => {
@@ -108,21 +103,20 @@ function Sidebar() {
                             <FaHome /> Home
                         </Nav.Link>
 
-                        {userRole === 'wholesaler' && (
-                            <Nav.Link
-                                onClick={() => handleNavigation('/wholesaler-dashboard')}
-                                className={styles.navlink}
-                            >
-                                <FaUsers /> Dashboard
-                            </Nav.Link>
-                        )}
-
-                        <Nav.Link onClick={() => handleNavigation('/pitches')} className={styles.navlink}>
-                            <FaClipboardList /> Pitch List
+                        {/* Unified Dashboard Link for All Roles */}
+                        <Nav.Link
+                            onClick={() => handleNavigation('/dashboard')}
+                            className={styles.navlink}
+                        >
+                            <FaUsers /> Dashboard
                         </Nav.Link>
 
-                        <Nav.Link onClick={() => handleNavigation('/add-pitch')} className={styles.navlink}>
-                            <FaPlus /> Add Pitch
+                        {/* Add Update Profile Link */}
+                        <Nav.Link
+                            onClick={() => handleNavigation('/update-profile')}
+                            className={styles.navlink}
+                        >
+                            <FaClipboardList /> Update Profile
                         </Nav.Link>
 
                         {/* Show logout option for all users */}

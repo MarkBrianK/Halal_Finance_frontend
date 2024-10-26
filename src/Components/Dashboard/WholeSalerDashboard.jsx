@@ -1,42 +1,88 @@
-// src/Components/Dashboard/WholeSalerDashboard.js
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Card, Table, Button } from "react-bootstrap";
-import { FaMoneyCheckAlt, FaClipboardList, FaChartLine } from "react-icons/fa";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { FaMoneyCheckAlt, FaClipboardList, FaChartLine, FaUser } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import axios from "../utilis/axiosConfig";
 
-const WholeSalerDashboard = () => {
-  const navigate = useNavigate(); // Initialize useNavigate
+const WholeSalerDashboard = ({ userId }) => {
+  const navigate = useNavigate();
 
-  // Sample data
-  const investments = [
-    { id: 1, borrower: "John Doe", amount: 5000, status: "Invested" },
-    { id: 2, borrower: "Alice Johnson", amount: 3000, status: "Pending" },
-  ];
+  const [wholesaler, setWholesaler] = useState(null);
+  const [investments, setInvestments] = useState([]);
+  const [earnings, setEarnings] = useState([]);
 
-  const earnings = [
-    { id: 1, date: "2024-01-20", amount: 250, status: "Paid" },
-    { id: 2, date: "2024-02-20", amount: 100, status: "Pending" },
-  ];
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:3000/profiles/${userId}`);
+        setWholesaler(response.data);
+        setInvestments(response.data.investments || []);
+        setEarnings(response.data.earnings || []);
+      } catch (error) {
+        console.error("Error fetching wholesaler data:", error);
+      }
+    };
+
+    if (userId) {
+      fetchData();
+    }
+  }, [userId]);
 
   const handleAddProduct = () => {
-    navigate('/add-product'); // Navigate to Add Product page
+    navigate('/add-product');
   };
+
+  const handleViewProfile = () => {
+    navigate('/profile');
+  };
+
+  if (!wholesaler) {
+    return <div>Loading...</div>;
+  }
+
+  // Determine the title to display
+  const dashboardTitle = wholesaler.name ? `${wholesaler.name}'s Dashboard` : "Dashboard";
 
   return (
     <Container fluid className="p-4">
+      {/* Wholesaler Logo and Name Section */}
+      <Row className="mb-4 text-center">
+        <Col>
+          {wholesaler.profile_picture ? (
+            <img
+              src={wholesaler.profile_picture}
+              alt="Wholesaler Logo"
+              style={{ width: '150px', height: 'auto' }}
+            />
+          ) : (
+            <FaUser size={150} style={{ color: '#c7a034' }} /> // Default user icon
+          )}
+          <h1 style={{ color: "#c7a034" }}>{wholesaler.name || "User"}</h1>
+          <p>{wholesaler.profile_description}</p>
+        </Col>
+      </Row>
+
+      {/* Dashboard Title */}
       <h2 className="text-center" style={{ color: "#c7a034" }}>
-        Wholesaler Dashboard
+        {dashboardTitle} {/* Use the determined title */}
       </h2>
 
-      {/* Add Product Button */}
+      {/* Add Product and View Profile Buttons */}
       <Row className="mb-4">
         <Col className="text-end">
           <Button
             variant="success"
             onClick={handleAddProduct}
-            style={{ marginBottom: '20px' }}
+            style={{ marginBottom: '20px', marginRight: '10px' }}
           >
             Add Product
+          </Button>
+          <Button
+            variant="info"
+            onClick={handleViewProfile}
+            style={{ marginBottom: '20px' }}
+          >
+            <FaUser className="me-2" /> View Profile
           </Button>
         </Col>
       </Row>
@@ -76,7 +122,7 @@ const WholeSalerDashboard = () => {
 
       <Row className="mb-4">
         <Col>
-          <h4>Current Investments</h4>
+          <h4 style={{ color: "white" }}>Current Investments</h4>
           <Table striped bordered hover>
             <thead>
               <tr>
@@ -102,7 +148,7 @@ const WholeSalerDashboard = () => {
 
       <Row className="mb-4">
         <Col>
-          <h4>Earnings History</h4>
+          <h4 style={{ color: "white" }}>Earnings History</h4>
           <Table striped bordered hover>
             <thead>
               <tr>

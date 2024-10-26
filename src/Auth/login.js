@@ -15,6 +15,7 @@ function Login() {
         localStorage.setItem('token', response.data.token);
         const userRole = response.data.role;
         localStorage.setItem('role', userRole);
+        window.location.reload()
         navigate('/')
       })
       .catch(error => {
