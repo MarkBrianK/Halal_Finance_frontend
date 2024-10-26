@@ -6,9 +6,9 @@ import Login from './Auth/login';
 import HomePage from './Components/Pages/HomePage';
 import Sidebar from './Components/Layouts/Sidebar';
 import Logout from './Auth/logout';
-import BorrowerDashboard from './Components/Dashboard/BorrowerDashboard';
 import AdminDashboard from './Components/Dashboard/AdminDashboard';
-import InvestorDashboard from './Components/Dashboard/InvestorDashboard';
+import WholeSalerDashboard from './Components/Dashboard/WholeSalerDashboard';
+import CorporateDashboard from './Components/Dashboard/CorporateDashboard';
 import PitchList from './Components/Pitches/PitchList';
 import AddPitch from './Components/Pitches/AddPitch';
 import UpdatePitch from './Components/Pitches/UpdatePitch';
@@ -40,7 +40,6 @@ const App = () => {
 
   return (
     <Container fluid>
-      {/* Conditionally render the Sidebar only when logged in */}
       {isLoggedin && (
         <div style={{ position: 'absolute', top: '20px', right: '20px', zIndex: 1050 }}>
           <Sidebar />
@@ -58,9 +57,9 @@ const App = () => {
 
             {isLoggedin && (
               <>
-                <Route path="/borrower-dashboard" element={<BorrowerDashboard userId={userId}/>} />
+                <Route path="/wholesaler-dashboard" element={<WholeSalerDashboard userId={userId}/>} />
                 <Route path="/admin-dashboard" element={<AdminDashboard />} />
-                <Route path="/investor-dashboard" element={<InvestorDashboard />} />
+                <Route path="/corporate-dashboard" element={<CorporateDashboard />} />
                 <Route path="/pitches" element={<PitchList userId={userId} />} />
                 <Route path="/add-pitch" element={<AddPitch />} />
                 <Route path="/update-pitch" element={<UpdatePitch />} />
