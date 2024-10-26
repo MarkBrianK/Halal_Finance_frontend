@@ -16,7 +16,6 @@ const HomePage = ({ isLoggedIn }) => {
             try {
                 const response = await axios.get('http://localhost:3000/products');
                 setProducts(response.data);
-                console.log(response.data);
             } catch (error) {
                 console.error('Error fetching products:', error);
             }
@@ -38,8 +37,7 @@ const HomePage = ({ isLoggedIn }) => {
     };
 
     const handleSearchSubmit = (e) => {
-        e.preventDefault(); // Prevent the default form submission
-        // You can add any search logic here
+        e.preventDefault(); 
         console.log('Searching for:', searchTerm);
     };
 

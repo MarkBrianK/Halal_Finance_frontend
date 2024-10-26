@@ -3,7 +3,7 @@ import React from "react";
 import { Container, Row, Col, Card, Table } from "react-bootstrap";
 import { FaMoneyCheckAlt, FaClipboardList, FaChartLine } from "react-icons/fa";
 
-const InvestorDashboard = () => {
+const WholeSalerDashboard = () => {
   // Sample data
   const investments = [
     { id: 1, borrower: "John Doe", amount: 5000, status: "Invested" },
@@ -108,4 +108,4 @@ const InvestorDashboard = () => {
   );
 };
 
-export default InvestorDashboard;
+export default WholeSalerDashboard;
