@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Offcanvas, Nav, Modal, Spinner } from "react-bootstrap";
-import { FaBars, FaSignOutAlt, FaHome, FaTachometerAlt, FaUsers, FaClipboardList, FaPlus } from "react-icons/fa";
+import { FaBars, FaSignOutAlt, FaHome, FaUsers, FaClipboardList, FaPlus } from "react-icons/fa";
 import { useNavigate, useLocation } from "react-router-dom";
 import logo from "../../Assets/Images/halal_logo.jpeg";
 import styles from '../../Styles/sidebar.module.css';
 
-function Sidebar({ navLinks = [] }) {
+function Sidebar() {
     const [isOpen, setIsOpen] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -39,7 +39,6 @@ function Sidebar({ navLinks = [] }) {
             setIsOpen(true);
         }
 
-        // Get user role from localStorage
         const role = localStorage.getItem('role');
         if (role) {
             setUserRole(role);
@@ -75,17 +74,6 @@ function Sidebar({ navLinks = [] }) {
         toggleSidebar();
     };
 
-    const dashboardLink = () => {
-        if (userRole === 'admin') {
-            return { name: 'Dashboard', path: '/admin-dashboard', icon: <FaTachometerAlt /> };
-        } else if (userRole === 'borrower') {
-            return { name: 'Dashboard', path: '/borrower-dashboard', icon: <FaUsers /> };
-        } else if (userRole === 'investor') {
-            return { name: 'Dashboard', path: '/investor-dashboard', icon: <FaUsers /> };
-        }
-        return null;
-    };
-
     return (
         <>
             <button
@@ -119,20 +107,25 @@ function Sidebar({ navLinks = [] }) {
                         <Nav.Link onClick={() => handleNavigation('/')} className={styles.navlink}>
                             <FaHome /> Home
                         </Nav.Link>
-                        {userRole && (
+
+                        {userRole === 'wholesaler' && (
                             <Nav.Link
-                                onClick={() => handleNavigation(dashboardLink()?.path)}
+                                onClick={() => handleNavigation('/wholesaler-dashboard')}
                                 className={styles.navlink}
                             >
-                                {dashboardLink()?.icon} {dashboardLink()?.name}
+                                <FaUsers /> Dashboard
                             </Nav.Link>
                         )}
+
                         <Nav.Link onClick={() => handleNavigation('/pitches')} className={styles.navlink}>
                             <FaClipboardList /> Pitch List
                         </Nav.Link>
+
                         <Nav.Link onClick={() => handleNavigation('/add-pitch')} className={styles.navlink}>
                             <FaPlus /> Add Pitch
                         </Nav.Link>
+
+                        {/* Show logout option for all users */}
                         <Nav.Link onClick={handleShow} className={`${styles.logoutBtn} mt-auto`} style={{ backgroundColor: '#c7a034', border: 'none' }}>
                             <FaSignOutAlt /> Logout
                         </Nav.Link>
