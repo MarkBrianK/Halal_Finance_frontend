@@ -9,9 +9,6 @@ import Logout from './Auth/logout';
 import AdminDashboard from './Components/Dashboard/AdminDashboard';
 import WholeSalerDashboard from './Components/Dashboard/WholeSalerDashboard';
 import CorporateDashboard from './Components/Dashboard/CorporateDashboard';
-import PitchList from './Components/Pitches/PitchList';
-import AddPitch from './Components/Pitches/AddPitch';
-import UpdatePitch from './Components/Pitches/UpdatePitch';
 import { jwtDecode } from 'jwt-decode';
 import Footer from './Components/Layouts/Footer';
 import AddProduct from './Components/Pages/AddProductPage';
@@ -20,7 +17,7 @@ const App = () => {
   const [userId, setUserId] = useState(null);
   const [isLoggedin, setIsLoggedIn] = useState(false);
   const [userRole, setUserRole] = useState(null);
-  const location = useLocation(); // Get the current location
+  const location = useLocation();
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -53,17 +50,21 @@ const App = () => {
             <Route path="/signup" element={!isLoggedin ? <SignUp /> : <Navigate to="/" />} />
             <Route path="/login" element={!isLoggedin ? <Login /> : <Navigate to={`/${userRole}-dashboard`} />} />
             <Route path="/logout" element={<Logout />} />
-            <Route path="/add-product" element={<AddProduct />} />
 
             {isLoggedin && (
               <>
-                <Route path="/wholesaler-dashboard" element={<WholeSalerDashboard userId={userId}/>} />
+
                 <Route path="/admin-dashboard" element={<AdminDashboard />} />
                 <Route path="/corporate-dashboard" element={<CorporateDashboard />} />
-                <Route path="/pitches" element={<PitchList userId={userId} />} />
-                <Route path="/add-pitch" element={<AddPitch />} />
-                <Route path="/update-pitch" element={<UpdatePitch />} />
               </>
+            )}
+            {isLoggedin && userRole === 'wholesaler' && (
+              <>
+                <Route path="/add-product" element={<AddProduct />} />
+                <Route path="/wholesaler-dashboard" element={<WholeSalerDashboard userId={userId} />} />
+              </>
+
+
             )}
           </Routes>
         </Col>
