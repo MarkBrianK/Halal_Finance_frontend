@@ -13,7 +13,7 @@ function Login() {
     axios.post('http://localhost:3000/users/sign_in', { user: formData })
       .then(response => {
         localStorage.setItem('token', response.data.token);
-        const userRole = response.data.role; // Assuming role is returned in the response
+        const userRole = response.data.role;
         localStorage.setItem('role', userRole);
         navigate('/')
       })
