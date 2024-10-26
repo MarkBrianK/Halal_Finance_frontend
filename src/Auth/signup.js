@@ -8,7 +8,7 @@ function SignUp() {
     email: '',
     password: '',
     password_confirmation: '',
-    role: 'borrower' // Default role
+    role: 'corporate' // Default role
   });
   const [error, setError] = useState('');
   const navigate = useNavigate();
@@ -41,32 +41,33 @@ function SignUp() {
               {error && <div className="alert alert-danger">{error}</div>}
               <Form onSubmit={handleSubmit} className="mt-3">
                 <Form.Group controlId="formEmail">
-                  <Form.Label className="formlabel" style={{ color: 'white',border:"none" }}>Email address</Form.Label>
+                  <Form.Label className="formlabel" style={{ color: 'white', border: "none" }}>Email address</Form.Label>
                   <Form.Control
                     type="email"
                     placeholder="Enter email"
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className={`mb-3 ${error ? 'is-invalid' : ''}`} 
+                    className={`mb-3 ${error ? 'is-invalid' : ''}`}
                     style={{ borderRadius: '4px', borderColor: error ? '#e3342f' : '#ccc' }}
                   />
                 </Form.Group>
 
                 <Form.Group controlId="formRole">
-                  <Form.Label className="formlabel" style={{ color: 'white',border:"none" }}>Select Role</Form.Label>
+                  <Form.Label className="formlabel" style={{ color: 'white', border: "none" }}>Select Role</Form.Label>
                   <Form.Select
                     value={formData.role}
                     onChange={(e) => setFormData({ ...formData, role: e.target.value })}
                     className={`mb-3 ${error ? 'is-invalid' : ''}`}
                     style={{ borderRadius: '4px', borderColor: error ? '#e3342f' : '#ccc' }}
                   >
-                    <option value="borrower">Borrower</option>
-                    <option value="investor">Investor</option>
+                    <option value="wholesaler"> WholeSaler</option>
+                    <option value="corporate">Corporate</option>
+                    <option value="individual">Individual</option>
                   </Form.Select>
                 </Form.Group>
 
                 <Form.Group controlId="formPassword">
-                  <Form.Label className="formlabel" style={{ color: 'white',border:"none" }}>Password</Form.Label>
+                  <Form.Label className="formlabel" style={{ color: 'white', border: "none" }}>Password</Form.Label>
                   <Form.Control
                     type="password"
                     placeholder="Password"
@@ -78,7 +79,7 @@ function SignUp() {
                 </Form.Group>
 
                 <Form.Group controlId="formPasswordConfirm">
-                  <Form.Label className="formlabel" style={{ color: 'white',border:"none" }}>Confirm Password</Form.Label>
+                  <Form.Label className="formlabel" style={{ color: 'white', border: "none" }}>Confirm Password</Form.Label>
                   <Form.Control
                     type="password"
                     placeholder="Confirm Password"
