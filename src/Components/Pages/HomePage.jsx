@@ -15,9 +15,7 @@ const HomePage = ({ isLoggedIn }) => {
         const fetchWholesalers = async () => {
             try {
                 const response = await axios.get('http://localhost:3000/profiles');
-                console.log('API Response:', response.data); // Log the entire response data
                 const filteredWholesalers = response.data.filter(user => user.role === 'wholesaler');
-                console.log('Filtered Wholesalers:', filteredWholesalers); // Log filtered wholesalers
                 setWholesalers(filteredWholesalers);
             } catch (error) {
                 console.error('Error fetching profiles:', error);
