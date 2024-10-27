@@ -73,50 +73,43 @@ const HomePage = ({ isLoggedIn }) => {
                 <Row className="justify-content-center">
                     {wholeSalers.map((wholesaler) => (
                         <Col xs={12} sm={6} md={4} lg={3} key={wholesaler.id} className="mb-4">
-                            <Card
-                                className="text-center position-relative"
-                                style={{
-                                    background: 'linear-gradient(90deg, black 5%, gold 140%)',
-                                    color: 'white',
-                                    borderRadius: '15px',
-                                    transition: 'transform 0.3s, box-shadow 0.3s',
-                                    cursor: 'pointer',
-                                    boxShadow: '0 4px 10px rgba(0, 0, 0, 0.3)',
-                                }}
-                            >
-                                <Card.Header>
-                                    <img src={wholesaler.profile_picture} alt={`${wholesaler.name} Logo`} style={{ width: '100px', height: 'auto', borderRadius: '50%' }} />
-                                    <h5 style={{color:"white"}}>{wholesaler.name}</h5>
-                                </Card.Header>
+                        <Card
+                            className="text-center position-relative"
+                            style={{
+                                backgroundColor: 'white',
+                                color: '#333',
+                                borderRadius: '15px',
+                                transition: 'transform 0.3s, box-shadow 0.3s',
+                                cursor: 'pointer',
+                                boxShadow: '0 4px 10px rgba(0, 0, 0, 0.2)',
+                            }}
+                        >
+                            <Card.Header style={{ backgroundColor: '', borderRadius: '15px 15px 0 0', color: 'black' }}>
+                                <img src={wholesaler.profile_picture} alt={`${wholesaler.name} Logo`} style={{ width: '80px', height: '80px', borderRadius: '50%' }} />
+                                <h5 style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>{wholesaler.name}</h5>
+                            </Card.Header>
+                            <Card.Body>
+                                <p style={{ color: '#555', fontStyle: 'italic', marginBottom:"5px" }}>{wholesaler.profile_description || "No description available"}</p>
                                 <BootstrapCarousel>
                                     {wholesaler.products.map((product, index) => (
                                         <BootstrapCarousel.Item key={index}>
-
                                             {product.product_images && product.product_images.length > 0 ? (
                                                 <Image
                                                     cloudName="djmvocl1y"
-                                                    publicId={product.product_images[0].image} // Safe to access now
+                                                    publicId={product.product_images[0].image}
                                                     alt={`Image of ${product.name}`}
                                                     loading="lazy"
-                                                    style={{ objectFit: 'contain', height: '250px', width: '100%' }}
+                                                    style={{ objectFit: 'contain', height: '200px', width: '100%' }}
                                                 />
                                             ) : (
-                                                <div style={{ height: '250px', display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: 'lightgray' }}>
+                                                <div style={{ height: '200px', display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: 'lightgray' }}>
                                                     <span>No Image Available</span>
                                                 </div>
                                             )}
                                             <Card.Body>
-                                                <Card.Title style={{ fontSize: '1.25rem', fontWeight: 'bold' }}>
-                                                    Product: {product.name}
-                                                </Card.Title>
-                                                <Card.Text style={{ minHeight: '60px', margin: '10px 0' }}>
-                                                    Description: {product.description}
-                                                </Card.Text>
-                                                <Card.Footer style={{ backgroundColor: 'black', color: 'white' }}>
-                                                    <small style={{ fontSize: '1rem', fontWeight: 'bold' }}>
-                                                        {`Price: Ksh ${product.price}`}
-                                                    </small>
-                                                </Card.Footer>
+                                                <Card.Title style={{ fontSize: '1.2rem' }}>Product: {product.name}</Card.Title>
+                                                <Card.Text style={{ color: '#666' }}>{product.description}</Card.Text>
+                                                <Card.Text >Price: Ksh {product.price}</Card.Text>
                                             </Card.Body>
                                             {isLoggedIn && (
                                                 <Button
@@ -129,22 +122,19 @@ const HomePage = ({ isLoggedIn }) => {
                                                         width: '40px',
                                                         height: '40px',
                                                         borderRadius: '50%',
-                                                        display: 'flex',
-                                                        justifyContent: 'center',
-                                                        alignItems: 'center',
-                                                        padding: '0',
                                                         color: 'white',
                                                     }}
                                                 >
-                                                    <FaShoppingCart style={{ fontSize: '20px' }} />
+                                                    <FaShoppingCart />
                                                 </Button>
                                             )}
                                         </BootstrapCarousel.Item>
                                     ))}
-
                                 </BootstrapCarousel>
-                            </Card>
-                        </Col>
+                            </Card.Body>
+                        </Card>
+                    </Col>
+
                     ))}
                 </Row>
             )}
