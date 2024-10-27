@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axios from '../Components/utilis/axiosConfig';
 
 function SignUp() {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
     password_confirmation: '',
-    role: 'corporate' // Default role
+    role: 'corporate' 
   });
   const [error, setError] = useState('');
   const navigate = useNavigate();
@@ -20,8 +20,7 @@ function SignUp() {
       return;
     }
 
-    // Send role along with the user data
-    axios.post('http://localhost:3000/users', { user: formData })
+    axios.post('/users', { user: formData })
       .then(response => {
         alert('Confirmation email sent! Check your inbox.');
         navigate("/login");

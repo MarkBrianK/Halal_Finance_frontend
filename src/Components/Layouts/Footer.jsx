@@ -5,7 +5,7 @@ import { FaPhoneAlt, FaEnvelope } from 'react-icons/fa';
 const Footer = () => {
     return (
         <footer style={{ background: 'linear-gradient(90deg, gold 0%, black 100%)', color: 'white', padding: '10px 0', marginTop:"20px" }}>
-            <Container>
+            <Container >
                 <Row className="justify-content-center mx-0 text-center">
                     <Col xs={12} md={6} className="mb-2">
                         <h5 style={{ fontSize: '1.25rem' }}>Contact Us</h5>

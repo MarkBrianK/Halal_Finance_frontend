@@ -17,7 +17,7 @@ export default function UpdateProfile({ userId }) {
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/profiles/${userId}`);
+        const response = await axios.get(`/profiles/${userId}`);
         if (response.data) {
           setUserDetails(response.data);
         } else {
@@ -61,7 +61,7 @@ export default function UpdateProfile({ userId }) {
     try {
       await axios.put(`http://localhost:3000/profiles/${userId}`, formData, {
         headers: {
-          'Content-Type': 'multipart/form-data' 
+          'Content-Type': 'multipart/form-data'
         }
       });
       navigate('/dashboard');

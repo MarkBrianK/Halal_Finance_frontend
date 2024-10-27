@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 import { useNavigate, Link } from 'react-router-dom';
-import axios from 'axios';
+import axios from '../Components/utilis/axiosConfig';
 
 function Login() {
   const navigate = useNavigate();
@@ -10,7 +10,7 @@ function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios.post('http://localhost:3000/users/sign_in', { user: formData })
+    axios.post('/users/sign_in', { user: formData })
       .then(response => {
         localStorage.setItem('token', response.data.token);
         const userRole = response.data.role;

@@ -18,11 +18,11 @@ function Sidebar() {
     };
 
     const handleMouseEnter = () => {
-        setIsOpen(true);
+        setIsOpen(false);
     };
 
     const handleMouseLeave = () => {
-        setIsOpen(false);
+        setIsOpen(true);
     };
 
     const handleResize = () => {
@@ -74,13 +74,13 @@ function Sidebar() {
             <button
                 onClick={toggleSidebar}
                 className={styles.sidebarToggleBtn}
-                style={{ margin: '20px', backgroundColor: '#c7a034', border: 'none' }}
+                style={{ margin: '28px 0px 0px 0px', backgroundColor: '#c7a034', border: 'none' }}
             >
-                <FaBars style={{ color: 'white' }} />
+                <FaBars style={{ color: 'white'  }} />
             </button>
 
             <Offcanvas
-                show={isOpen}
+                show={!isOpen}
                 onHide={toggleSidebar}
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
@@ -103,7 +103,6 @@ function Sidebar() {
                             <FaHome /> Home
                         </Nav.Link>
 
-                        {/* Unified Dashboard Link for All Roles */}
                         <Nav.Link
                             onClick={() => handleNavigation('/dashboard')}
                             className={styles.navlink}

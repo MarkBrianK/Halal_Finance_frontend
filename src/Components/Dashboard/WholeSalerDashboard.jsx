@@ -1,23 +1,24 @@
 import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Card, Table, Button } from "react-bootstrap";
-import { FaMoneyCheckAlt, FaClipboardList, FaChartLine, FaUser } from "react-icons/fa";
+import { FaMoneyCheckAlt, FaClipboardList, FaUser, FaWallet } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import axios from "../utilis/axiosConfig";
 
 const WholeSalerDashboard = ({ userId }) => {
   const navigate = useNavigate();
-
   const [wholesaler, setWholesaler] = useState(null);
   const [investments, setInvestments] = useState([]);
   const [earnings, setEarnings] = useState([]);
+  const [walletBalance, setWalletBalance] = useState(0);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/profiles/${userId}`);
+        const response = await axios.get(`/profiles/${userId}`);
         setWholesaler(response.data);
         setInvestments(response.data.investments || []);
         setEarnings(response.data.earnings || []);
+        setWalletBalance(response.data.wallet_balance || 0);
       } catch (error) {
         console.error("Error fetching wholesaler data:", error);
       }
@@ -36,24 +37,25 @@ const WholeSalerDashboard = ({ userId }) => {
     navigate('/profile');
   };
 
+  const handleAddFunds = () => {
+    // Add functionality for adding funds
+  };
+
+  const handleWithdrawFunds = () => {
+    // Add functionality for withdrawing funds
+  };
+
   if (!wholesaler) {
     return <div>Loading...</div>;
   }
 
-  // Determine the title to display
-  const dashboardTitle = wholesaler.name ? `${wholesaler.name}'s Dashboard` : "Dashboard";
-
   return (
     <Container fluid className="p-4">
-      {/* Wholesaler Logo and Name Section */}
+     ]
       <Row className="mb-4 text-center">
         <Col>
           {wholesaler.profile_picture ? (
-            <img
-              src={wholesaler.profile_picture}
-              alt="Wholesaler Logo"
-              style={{ width: '150px', height: 'auto' }}
-            />
+            <img src={wholesaler.profile_picture} alt="Wholesaler Logo" style={{ width: '150px', height: 'auto' }} />
           ) : (
             <FaUser size={150} style={{ color: '#c7a034' }} /> // Default user icon
           )}
@@ -62,38 +64,43 @@ const WholeSalerDashboard = ({ userId }) => {
         </Col>
       </Row>
 
-      {/* Dashboard Title */}
+
       <h2 className="text-center" style={{ color: "#c7a034" }}>
-        {dashboardTitle} {/* Use the determined title */}
+        {wholesaler.name ? `${wholesaler.name}'s Dashboard` : "Dashboard"}
       </h2>
 
-      {/* Add Product and View Profile Buttons */}
+
       <Row className="mb-4">
         <Col className="text-end">
-          <Button
-            variant="success"
-            onClick={handleAddProduct}
-            style={{ marginBottom: '20px', marginRight: '10px' }}
-          >
+          <Button variant="success" onClick={handleAddProduct} style={{ marginBottom: '20px', marginRight: '10px' }}>
             Add Product
           </Button>
-          <Button
-            variant="info"
-            onClick={handleViewProfile}
-            style={{ marginBottom: '20px' }}
-          >
+          <Button variant="info" onClick={handleViewProfile} style={{ marginBottom: '20px' }}>
             <FaUser className="me-2" /> View Profile
           </Button>
         </Col>
       </Row>
 
+      {/* Wallet Balance Card */}
       <Row className="mb-4">
+        <Col md={4}>
+          <Card className="shadow-sm text-center">
+            <Card.Body>
+              <Card.Title>
+                <FaWallet className="me-2" /> Wallet Balance
+              </Card.Title>
+              <Card.Text>Ksh {walletBalance.toFixed(2)}</Card.Text>
+              <Button variant="primary" onClick={handleAddFunds} className="me-2">Add Funds</Button>
+              <Button variant="danger" onClick={handleWithdrawFunds}>Withdraw</Button>
+            </Card.Body>
+          </Card>
+        </Col>
+
+
         <Col md={4}>
           <Card className="shadow-sm">
             <Card.Body>
-              <Card.Title>
-                <FaMoneyCheckAlt className="me-2" /> Total Investments
-              </Card.Title>
+              <Card.Title><FaMoneyCheckAlt className="me-2" /> Total Investments</Card.Title>
               <Card.Text>{investments.length}</Card.Text>
             </Card.Body>
           </Card>
@@ -101,24 +108,13 @@ const WholeSalerDashboard = ({ userId }) => {
         <Col md={4}>
           <Card className="shadow-sm">
             <Card.Body>
-              <Card.Title>
-                <FaClipboardList className="me-2" /> Total Earnings
-              </Card.Title>
+              <Card.Title><FaClipboardList className="me-2" /> Total Earnings</Card.Title>
               <Card.Text>{earnings.length}</Card.Text>
             </Card.Body>
           </Card>
         </Col>
-        <Col md={4}>
-          <Card className="shadow-sm">
-            <Card.Body>
-              <Card.Title>
-                <FaChartLine className="me-2" /> Earnings Statistics
-              </Card.Title>
-              <Card.Text>View detailed earnings report</Card.Text>
-            </Card.Body>
-          </Card>
-        </Col>
       </Row>
+
 
       <Row className="mb-4">
         <Col>
@@ -137,7 +133,7 @@ const WholeSalerDashboard = ({ userId }) => {
                 <tr key={investment.id}>
                   <td>{investment.id}</td>
                   <td>{investment.borrower}</td>
-                  <td>${investment.amount}</td>
+                  <td>Ksh {investment.amount}</td>
                   <td>{investment.status}</td>
                 </tr>
               ))}
@@ -145,6 +141,7 @@ const WholeSalerDashboard = ({ userId }) => {
           </Table>
         </Col>
       </Row>
+
 
       <Row className="mb-4">
         <Col>
@@ -163,7 +160,7 @@ const WholeSalerDashboard = ({ userId }) => {
                 <tr key={earning.id}>
                   <td>{earning.id}</td>
                   <td>{earning.date}</td>
-                  <td>${earning.amount}</td>
+                  <td>Ksh {earning.amount}</td>
                   <td>{earning.status}</td>
                 </tr>
               ))}
