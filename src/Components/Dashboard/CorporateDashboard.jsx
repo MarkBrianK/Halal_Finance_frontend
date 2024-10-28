@@ -149,7 +149,7 @@ const CorporateDashboard = ({ userId }) => {
                                 <tr key={payment.id}>
                                     <td>{payment.id}</td>
                                     <td>{payment.date}</td>
-                                    <td>${payment.amount}</td>
+                                    <td>Ksh {payment.amount}</td>
                                     <td>{payment.status}</td>
                                 </tr>
                             ))}
