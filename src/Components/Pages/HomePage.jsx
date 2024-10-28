@@ -10,6 +10,7 @@ const HomePage = ({ isLoggedIn }) => {
     const [wholesalers, setWholesalers] = useState([]);
     const [filteredWholesalers, setFilteredWholesalers] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
+    const [cartItemCount, setCartItemCount] = useState(0); // State for cart item count
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -41,12 +42,34 @@ const HomePage = ({ isLoggedIn }) => {
         }
     }, [searchTerm, wholesalers]);
 
+    // New useEffect to fetch cart item count
+    useEffect(() => {
+        const fetchCartItemCount = async () => {
+            try {
+                const response = await axios.get('/cart'); // Endpoint to get cart items
+                setCartItemCount(response.data.cart_items.length || 0); // Update the cart item count
+            } catch (error) {
+                console.error('Error fetching cart item count:', error);
+            }
+        };
+
+        fetchCartItemCount();
+    }, [cartItemCount]); // Fetch when cartItemCount changes
+
     const handleLogIn = () => {
         navigate('/login');
     };
 
-    const addToCart = (productId) => {
-        console.log(`Product with ID ${productId} added to cart.`);
+    const addToCart = async (productId) => {
+        try {
+            await axios.post('/cart_items', { product_id: productId });
+            console.log(`Product with ID ${productId} added to cart.`);
+            // Update cart item count after adding to cart
+            const response = await axios.get('/cart');
+            setCartItemCount(response.data.cart_items.length || 0);
+        } catch (error) {
+            console.error('Error adding product to cart:', error);
+        }
     };
 
     const handleSearch = (e) => {
@@ -61,6 +84,25 @@ const HomePage = ({ isLoggedIn }) => {
         <Container fluid style={{ padding: '2px 0' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px' }}>
                 <img src={logo} alt="Company Logo" style={{ maxWidth: '80px', height: 'auto', borderRadius: "50%" }} />
+
+                {/* Add Cart Icon Link with item count */}
+                <Link to="/cart" style={{ marginLeft: '20px', color: 'white', position: 'relative' }}>
+                    <FaShoppingCart size={30} />
+                    {cartItemCount > 0 && (
+                        <span style={{
+                            position: 'absolute',
+                            top: '-5px',
+                            right: '-10px',
+                            background: 'red',
+                            color: 'white',
+                            borderRadius: '50%',
+                            padding: '2px 6px',
+                            fontSize: '0.75rem',
+                        }}>
+                            {cartItemCount}
+                        </span>
+                    )}
+                </Link>
 
                 <Form inline onSubmit={handleSearchSubmit} style={{ flex: 1, display: 'flex', justifyContent: 'center', padding: '0 20px', background: "none" }}>
                     <Form.Group style={{ width: '300px', display: 'flex' }}>
@@ -118,21 +160,27 @@ const HomePage = ({ isLoggedIn }) => {
                                                     <Card.Text style={{ color: '#666' }}>Product Description: {product.description}</Card.Text>
                                                     <Card.Text>Price: Ksh {product.price}</Card.Text>
                                                     {isLoggedIn && (
-                                                        <Button
-                                                            variant="success"
-                                                            onClick={() => addToCart(product.id)}
+                                                        <div
                                                             style={{
                                                                 position: 'absolute',
                                                                 top: '10px',
                                                                 right: '10px',
-                                                                width: '40px',
-                                                                height: '40px',
-                                                                borderRadius: '50%',
-                                                                color: 'white',
+                                                                zIndex: 10, // Higher than carousel content
                                                             }}
                                                         >
-                                                            <FaShoppingCart />
-                                                        </Button>
+                                                            <Button
+                                                                variant="success"
+                                                                onClick={() => addToCart(product.id)}
+                                                                style={{
+                                                                    width: '40px',
+                                                                    height: '40px',
+                                                                    borderRadius: '50%',
+                                                                    color: 'white',
+                                                                }}
+                                                            >
+                                                                <FaShoppingCart />
+                                                            </Button>
+                                                        </div>
                                                     )}
                                                 </Card.Body>
                                             </BootstrapCarousel.Item>
