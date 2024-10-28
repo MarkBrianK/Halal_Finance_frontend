@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Container, Row, Col, Card, Button, Table, Alert } from "react-bootstrap";
-import { FaMoneyBillAlt, FaClipboardCheck, FaHistory, FaUserEdit, FaWallet, FaBoxOpen } from "react-icons/fa";
-import axios from "../utilis/axiosConfig"
+import { FaMoneyBillAlt, FaClipboardCheck, FaHistory, FaUserEdit, FaWallet, FaBoxOpen, FaFileInvoice } from "react-icons/fa";
+import axios from "../utilis/axiosConfig";
 
 const CorporateDashboard = ({ userId }) => {
     const [loans, setLoans] = useState([]);
@@ -9,6 +9,7 @@ const CorporateDashboard = ({ userId }) => {
     const [wallet, setWallet] = useState({});
     const [transactions, setTransactions] = useState([]);
     const [orders, setOrders] = useState([]);
+    const [invoices, setInvoices] = useState([]);
     const [error, setError] = useState('');
 
     useEffect(() => {
@@ -28,6 +29,10 @@ const CorporateDashboard = ({ userId }) => {
 
                 const ordersResponse = await axios.get('/orders');
                 setOrders(ordersResponse.data);
+
+                const invoicesResponse = await axios.get('/invoices');
+                setInvoices(invoicesResponse.data);
+
             } catch (err) {
                 setError('Error fetching data. Please try again later.');
                 console.error(err);
@@ -36,6 +41,21 @@ const CorporateDashboard = ({ userId }) => {
 
         fetchData();
     }, [userId]);
+
+    const confirmInvoice = async (invoiceId) => {
+        try {
+            await axios.patch(`/invoices/${invoiceId}`, { status: 'confirmed' });
+            setInvoices(prevInvoices =>
+                prevInvoices.map(invoice =>
+                    invoice.id === invoiceId ? { ...invoice, status: 'confirmed' } : invoice
+                )
+            );
+        } catch (err) {
+            setError('Error confirming invoice. Please try again later.');
+            console.error(err);
+        }
+    };
+
     return (
         <Container fluid className="p-4">
             <h2 className="text-center" style={{ color: "white", fontWeight: "bold" }}>
@@ -158,10 +178,48 @@ const CorporateDashboard = ({ userId }) => {
                             {orders.map((order) => (
                                 <tr key={order.id}>
                                     <td>{order.id}</td>
-                                    <td>{order.product_name}</td>
+                                    <td>{order.product.name}</td>
                                     <td>{order.quantity}</td>
                                     <td>Ksh {order.total_price}</td>
                                     <td>{order.status}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </Table>
+                </Col>
+            </Row>
+
+            {/* Invoices Table */}
+            <Row className="mb-4">
+                <Col>
+                    <h4 style={{color:"white"}}>
+                        <FaFileInvoice className="me-2" />
+                         Invoices
+                    </h4>
+                    <Table striped bordered hover>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Order ID</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {invoices.map((invoice) => (
+                                <tr key={invoice.id}>
+                                    <td>{invoice.id}</td>
+                                    <td>{invoice.order_id}</td>
+                                    <td>Ksh {invoice.amount}</td>
+                                    <td>{invoice.status}</td>
+                                    <td>
+                                        {invoice.status !== 'confirmed' && (
+                                            <Button variant="success" onClick={() => confirmInvoice(invoice.id)}>
+                                                Confirm
+                                            </Button>
+                                        )}
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>
