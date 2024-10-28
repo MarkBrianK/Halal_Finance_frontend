@@ -86,9 +86,7 @@ const HomePage = ({ isLoggedIn }) => {
         <Container fluid style={{ padding: '2px 0' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px' }}>
                 <img src={logo} alt="Company Logo" style={{ maxWidth: '80px', height: 'auto', borderRadius: "50%" }} />
-
-                {/* Add Cart Icon Link with item count */}
-                <Link to="/cart" style={{ marginLeft: '20px', color: 'white', position: 'relative' }}>
+                {isLoggedIn && <Link to="/cart" style={{ marginLeft: '20px', color: 'white', position: 'relative' }}>
                     <FaShoppingCart size={30} />
                     {cartItemCount > 0 && (
                         <span style={{
@@ -104,7 +102,8 @@ const HomePage = ({ isLoggedIn }) => {
                             {cartItemCount}
                         </span>
                     )}
-                </Link>
+                </Link>}
+
 
                 <Form inline onSubmit={handleSearchSubmit} style={{ flex: 1, display: 'flex', justifyContent: 'center', padding: '0 20px', background: "none" }}>
                     <Form.Group style={{ width: '300px', display: 'flex' }}>
