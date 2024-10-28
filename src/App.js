@@ -15,6 +15,7 @@ const AddProduct = React.lazy(() => import('./Components/Pages/AddProductPage'))
 const Sidebar = React.lazy(() => import('./Components/Layouts/Sidebar'));
 const Footer = React.lazy(() => import('./Components/Layouts/Footer'));
 const WholesalerProfilePage = React.lazy(() => import('./Components/Pages/WholesalerProfile'));
+const Cart = React.lazy(() => import('./Components/Pages/Cart'));
 
 const App = () => {
   const [userId, setUserId] = useState(null);
@@ -88,6 +89,7 @@ const App = () => {
                   <Route path="/update-profile" element={<UpdateProfile userId={userId} />} />
                   <Route path="/add-product" element={<AddProduct />} />
                   <Route path="/wholesaler/:id" element={<WholesalerProfilePage />} />
+                  <Route path="/cart" element={<Cart />} />
                 </>
               )}
             </Routes>
