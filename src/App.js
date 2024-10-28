@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, Suspense } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { Container, Row, Col } from 'react-bootstrap';
 import LoadingSpinner from './Components/Layouts/LoadingSpinner';
-import {jwtDecode} from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 
 const SignUp = React.lazy(() => import('./Auth/signup'));
 const Login = React.lazy(() => import('./Auth/login'));
@@ -66,26 +66,27 @@ const App = () => {
       )}
 
       <Row>
-        <Col className="content" style={{margin:"0px", padding:"0px"}}>
+        <Col className="content" style={{ margin: "0px", padding: "0px" }}>
           <Suspense fallback={<LoadingSpinner />}>
             <Routes>
               <Route path="/" element={<HomePage isLoggedIn={isLoggedIn} />} />
+
               <Route path="/signup" element={!isLoggedIn ? <SignUp /> : <Navigate to="/" />} />
               <Route path="/login" element={!isLoggedIn ? <Login setIsLoggedIn={setIsLoggedIn} setUserRole={setUserRole} /> : <Navigate to="/dashboard" />} />
+              <Route path="/dashboard" element={
+                userRole === 'admin' ? (
+                  <AdminDashboard />
+                ) : userRole === 'corporate' ? (
+                  <CorporateDashboard />
+                ) : userRole === 'wholesaler' ? (
+                  <WholeSalerDashboard userId={userId} />
+                ) : (
+                  <div></div>
+                )
+              } />
 
               {isLoggedIn && (
                 <>
-                  <Route path="/dashboard" element={
-                    userRole === 'admin' ? (
-                      <AdminDashboard />
-                    ) : userRole === 'corporate' ? (
-                      <CorporateDashboard />
-                    ) : userRole === 'wholesaler' ? (
-                      <WholeSalerDashboard userId={userId} />
-                    ) : (
-                      <Navigate to="/" />
-                    )
-                  } />
                   <Route path="/update-profile" element={<UpdateProfile userId={userId} />} />
                   <Route path="/add-product" element={<AddProduct />} />
                   <Route path="/wholesaler/:id" element={<WholesalerProfilePage />} />
@@ -94,6 +95,7 @@ const App = () => {
               )}
             </Routes>
           </Suspense>
+
         </Col>
       </Row>
       {location.pathname !== '/login' && location.pathname !== '/signup' && (
