@@ -18,16 +18,14 @@ const HomePage = ({ isLoggedIn }) => {
                 const response = await axios.get('/profiles');
                 const wholesalersData = response.data.filter(user => user.role === 'wholesaler');
                 setWholesalers(wholesalersData);
-                setFilteredWholesalers(wholesalersData); // initialize filtered wholesalers
+                setFilteredWholesalers(wholesalersData);
             } catch (error) {
                 console.error('Error fetching profiles:', error);
             }
         };
-
         fetchWholesalers();
     }, []);
 
-    // Update filtered wholesalers based on search term
     useEffect(() => {
         if (searchTerm) {
             const filtered = wholesalers.map(wholesaler => ({
@@ -36,7 +34,7 @@ const HomePage = ({ isLoggedIn }) => {
                     product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                     product.description.toLowerCase().includes(searchTerm.toLowerCase())
                 )
-            })).filter(wholesaler => wholesaler.products.length > 0); // only include wholesalers with matching products
+            })).filter(wholesaler => wholesaler.products.length > 0);
             setFilteredWholesalers(filtered);
         } else {
             setFilteredWholesalers(wholesalers);
@@ -90,17 +88,7 @@ const HomePage = ({ isLoggedIn }) => {
                 <Row className="justify-content-center">
                     {filteredWholesalers.map((wholesaler) => (
                         <Col xs={12} sm={6} md={4} lg={3} key={wholesaler.id} className="mb-4">
-                            <Card
-                                className="text-center position-relative"
-                                style={{
-                                    backgroundColor: 'white',
-                                    color: '#333',
-                                    borderRadius: '15px',
-                                    transition: 'transform 0.3s, box-shadow 0.3s',
-                                    cursor: 'pointer',
-                                    boxShadow: '0 4px 10px rgba(0, 0, 0, 0.2)',
-                                }}
-                            >
+                            <Card className="text-center position-relative" style={{ backgroundColor: 'white', color: '#333', borderRadius: '15px', boxShadow: '0 4px 10px rgba(0, 0, 0, 0.2)' }}>
                                 <Link to={`/wholesaler/${wholesaler.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                                     <Card.Header style={{ backgroundColor: '', borderRadius: '15px 15px 0 0', color: 'black' }}>
                                         <img src={wholesaler.profile_picture} alt={`${wholesaler.name} Logo`} style={{ width: '80px', height: '80px', borderRadius: '50%' }} />
@@ -109,7 +97,7 @@ const HomePage = ({ isLoggedIn }) => {
                                 </Link>
                                 <Card.Body>
                                     <p style={{ color: '#555', fontStyle: 'italic', marginBottom: "5px" }}>{wholesaler.profile_description || "No description available"}</p>
-                                    <BootstrapCarousel>
+                                    <BootstrapCarousel indicators={false} interval={null} style={{ position: 'relative' }}>
                                         {wholesaler.products.map((product, index) => (
                                             <BootstrapCarousel.Item key={index}>
                                                 {product.product_images && product.product_images.length > 0 ? (
@@ -129,24 +117,24 @@ const HomePage = ({ isLoggedIn }) => {
                                                     <Card.Title style={{ fontSize: '1.2rem' }}>Product: {product.name}</Card.Title>
                                                     <Card.Text style={{ color: '#666' }}>Product Description: {product.description}</Card.Text>
                                                     <Card.Text>Price: Ksh {product.price}</Card.Text>
+                                                    {isLoggedIn && (
+                                                        <Button
+                                                            variant="success"
+                                                            onClick={() => addToCart(product.id)}
+                                                            style={{
+                                                                position: 'absolute',
+                                                                top: '10px',
+                                                                right: '10px',
+                                                                width: '40px',
+                                                                height: '40px',
+                                                                borderRadius: '50%',
+                                                                color: 'white',
+                                                            }}
+                                                        >
+                                                            <FaShoppingCart />
+                                                        </Button>
+                                                    )}
                                                 </Card.Body>
-                                                {isLoggedIn && (
-                                                    <Button
-                                                        variant="success"
-                                                        onClick={() => addToCart(product.id)}
-                                                        style={{
-                                                            position: 'absolute',
-                                                            top: '10px',
-                                                            right: '10px',
-                                                            width: '40px',
-                                                            height: '40px',
-                                                            borderRadius: '50%',
-                                                            color: 'white',
-                                                        }}
-                                                    >
-                                                        <FaShoppingCart />
-                                                    </Button>
-                                                )}
                                             </BootstrapCarousel.Item>
                                         ))}
                                     </BootstrapCarousel>

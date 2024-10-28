@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Card, Table, Button } from "react-bootstrap";
 import { FaMoneyCheckAlt, FaClipboardList, FaUser, FaWallet } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "../utilis/axiosConfig";
 
-const WholeSalerDashboard = ({ userId }) => {
+const WholeSalerDashboard = () => {
   const navigate = useNavigate();
+  const { id } = useParams(); 
   const [wholesaler, setWholesaler] = useState(null);
   const [investments, setInvestments] = useState([]);
   const [earnings, setEarnings] = useState([]);
@@ -14,7 +15,7 @@ const WholeSalerDashboard = ({ userId }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`/profiles/${userId}`);
+        const response = await axios.get(`/profiles/${id}`);
         setWholesaler(response.data);
         setInvestments(response.data.investments || []);
         setEarnings(response.data.earnings || []);
@@ -24,10 +25,10 @@ const WholeSalerDashboard = ({ userId }) => {
       }
     };
 
-    if (userId) {
+    if (id) {
       fetchData();
     }
-  }, [userId]);
+  }, [id]);
 
   const handleAddProduct = () => {
     navigate('/add-product');
@@ -51,7 +52,6 @@ const WholeSalerDashboard = ({ userId }) => {
 
   return (
     <Container fluid className="p-4">
-     ]
       <Row className="mb-4 text-center">
         <Col>
           {wholesaler.profile_picture ? (
@@ -64,11 +64,9 @@ const WholeSalerDashboard = ({ userId }) => {
         </Col>
       </Row>
 
-
       <h2 className="text-center" style={{ color: "#c7a034" }}>
         {wholesaler.name ? `${wholesaler.name}'s Dashboard` : "Dashboard"}
       </h2>
-
 
       <Row className="mb-4">
         <Col className="text-end">
@@ -96,7 +94,6 @@ const WholeSalerDashboard = ({ userId }) => {
           </Card>
         </Col>
 
-
         <Col md={4}>
           <Card className="shadow-sm">
             <Card.Body>
@@ -114,7 +111,6 @@ const WholeSalerDashboard = ({ userId }) => {
           </Card>
         </Col>
       </Row>
-
 
       <Row className="mb-4">
         <Col>
@@ -141,7 +137,6 @@ const WholeSalerDashboard = ({ userId }) => {
           </Table>
         </Col>
       </Row>
-
 
       <Row className="mb-4">
         <Col>
