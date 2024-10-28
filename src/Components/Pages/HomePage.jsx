@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Row, Col, Container, Carousel as BootstrapCarousel, Card, Button, Form } from 'react-bootstrap';
+import { Row, Col, Container, Carousel as BootstrapCarousel, Card, Button, Form, Toast } from 'react-bootstrap';
 import { FaShoppingCart, FaSearch } from 'react-icons/fa';
 import logo from '../../Assets/Images/halal_logo.jpeg';
 import axios from '../utilis/axiosConfig';
@@ -11,6 +11,7 @@ const HomePage = ({ isLoggedIn }) => {
     const [filteredWholesalers, setFilteredWholesalers] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [cartItemCount, setCartItemCount] = useState(0); // State for cart item count
+    const [showToast, setShowToast] = useState(false); // State for showing toast
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -42,7 +43,6 @@ const HomePage = ({ isLoggedIn }) => {
         }
     }, [searchTerm, wholesalers]);
 
-    // New useEffect to fetch cart item count
     useEffect(() => {
         const fetchCartItemCount = async () => {
             try {
@@ -64,6 +64,8 @@ const HomePage = ({ isLoggedIn }) => {
         try {
             await axios.post('/cart_items', { product_id: productId });
             console.log(`Product with ID ${productId} added to cart.`);
+            // Show toast notification
+            setShowToast(true);
             // Update cart item count after adding to cart
             const response = await axios.get('/cart');
             setCartItemCount(response.data.cart_items.length || 0);
@@ -194,6 +196,25 @@ const HomePage = ({ isLoggedIn }) => {
             ) : (
                 <p>No products match your search.</p>
             )}
+
+            {/* Toast Notification for Add to Cart */}
+            <Toast
+                onClose={() => setShowToast(false)}
+                show={showToast}
+                delay={3000} // Toast will disappear after 3 seconds
+                autohide
+                style={{
+                    position: 'absolute',
+                    top: '20px',
+                    right: '20px',
+                    zIndex: 1000,
+                }}
+            >
+                <Toast.Header>
+                    <strong className="me-auto">Notification</strong>
+                </Toast.Header>
+                <Toast.Body>Product added to cart!</Toast.Body>
+            </Toast>
         </Container>
     );
 };
