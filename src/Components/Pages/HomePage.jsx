@@ -44,17 +44,18 @@ const HomePage = ({ isLoggedIn }) => {
     }, [searchTerm, wholesalers]);
 
     useEffect(() => {
-        const fetchCartItemCount = async () => {
-            try {
-                const response = await axios.get('/cart'); // Endpoint to get cart items
-                setCartItemCount(response.data.cart_items.length || 0); // Update the cart item count
-            } catch (error) {
-                console.error('Error fetching cart item count:', error);
-            }
-        };
-
-        fetchCartItemCount();
-    }, [cartItemCount]); // Fetch when cartItemCount changes
+        if (isLoggedIn) { // Only fetch cart items if user is logged in
+            const fetchCartItemCount = async () => {
+                try {
+                    const response = await axios.get('/cart'); // Endpoint to get cart items
+                    setCartItemCount(response.data.cart_items.length || 0); // Update the cart item count
+                } catch (error) {
+                    console.error('Error fetching cart item count:', error);
+                }
+            };
+            fetchCartItemCount();
+        }
+    }, [isLoggedIn, cartItemCount]); // Only refetch when logged in and cart count changes
 
     const handleLogIn = () => {
         navigate('/login');
@@ -67,8 +68,10 @@ const HomePage = ({ isLoggedIn }) => {
             // Show toast notification
             setShowToast(true);
             // Update cart item count after adding to cart
-            const response = await axios.get('/cart');
-            setCartItemCount(response.data.cart_items.length || 0);
+            if (isLoggedIn) {
+                const response = await axios.get('/cart');
+                setCartItemCount(response.data.cart_items.length || 0);
+            }
         } catch (error) {
             console.error('Error adding product to cart:', error);
         }
@@ -212,7 +215,7 @@ const HomePage = ({ isLoggedIn }) => {
                 <Toast.Header>
                     <strong className="me-auto">Notification</strong>
                 </Toast.Header>
-                <Toast.Body>Product added to cart!</Toast.Body>
+                <Toast.Body>Item added to cart!</Toast.Body>
             </Toast>
         </Container>
     );
