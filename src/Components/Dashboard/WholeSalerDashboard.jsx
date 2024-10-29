@@ -187,7 +187,7 @@ const WholeSalerDashboard = ({ userId }) => {
       {/* Orders Section */}
       <Row>
         <Col>
-          <h4 style={{ color: "#c7a034" }}>Your Orders</h4>
+          <h4 style={{ color: "#c7a034" }}>Orders</h4>
           <Table striped bordered hover>
             <thead>
               <tr>
