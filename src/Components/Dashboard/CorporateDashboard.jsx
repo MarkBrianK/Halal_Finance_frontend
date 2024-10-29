@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Container, Row, Col, Card, Button, Table, Alert } from "react-bootstrap";
-import { FaMoneyBillAlt, FaClipboardCheck, FaHistory, FaUserEdit, FaWallet, FaBoxOpen, FaFileInvoice } from "react-icons/fa";
+import { FaMoneyBillAlt, FaClipboardCheck, FaHistory, FaWallet, FaBoxOpen, FaFileInvoice } from "react-icons/fa";
 import axios from "../utilis/axiosConfig";
 
 const CorporateDashboard = ({ userId }) => {
     const [loans, setLoans] = useState([]);
     const [paymentHistory, setPaymentHistory] = useState([]);
     const [wallet, setWallet] = useState({});
-    const [transactions, setTransactions] = useState([]);
     const [orders, setOrders] = useState([]);
     const [invoices, setInvoices] = useState([]);
     const [error, setError] = useState('');
@@ -15,24 +14,19 @@ const CorporateDashboard = ({ userId }) => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const loansResponse = await axios.get('/loans');
+                const [loansResponse, paymentsResponse, walletResponse, ordersResponse, invoicesResponse] = await Promise.all([
+                    axios.get('/loans'),
+                    axios.get('/payments'),
+                    axios.get(`/wallets/${userId}`),
+                    axios.get('/orders'),
+                    axios.get('/invoices')
+                ]);
+
                 setLoans(loansResponse.data);
-
-                const paymentsResponse = await axios.get('/payments');
                 setPaymentHistory(paymentsResponse.data);
-
-                const walletResponse = await axios.get(`/wallets/${userId}`);
                 setWallet(walletResponse.data);
-
-                const transactionsResponse = await axios.get('/transactions');
-                setTransactions(transactionsResponse.data);
-
-                const ordersResponse = await axios.get('/orders');
                 setOrders(ordersResponse.data);
-
-                const invoicesResponse = await axios.get('/invoices');
                 setInvoices(invoicesResponse.data);
-
             } catch (err) {
                 setError('Error fetching data. Please try again later.');
                 console.error(err);
@@ -45,8 +39,8 @@ const CorporateDashboard = ({ userId }) => {
     const confirmInvoice = async (invoiceId) => {
         try {
             await axios.patch(`/invoices/${invoiceId}`, { status: 'confirmed' });
-            setInvoices(prevInvoices =>
-                prevInvoices.map(invoice =>
+            setInvoices((prevInvoices) =>
+                prevInvoices.map((invoice) =>
                     invoice.id === invoiceId ? { ...invoice, status: 'confirmed' } : invoice
                 )
             );
@@ -56,13 +50,30 @@ const CorporateDashboard = ({ userId }) => {
         }
     };
 
+    // Function to calculate due dates for each installment
+    const calculateDueDates = (createdAt, paymentSchedule) => {
+        const dueDates = [];
+        const creationDate = new Date(createdAt);
+
+        paymentSchedule.forEach((payment, index) => {
+            const dueDate = new Date(creationDate);
+            dueDate.setMonth(dueDate.getMonth() + index + 1); // Set due date for the next months
+            dueDates.push({
+                ...payment,
+                due_date: dueDate.toISOString().split('T')[0], // Format the date
+                amount_due: Math.ceil(parseFloat(payment.amount_due)) // Round up to the nearest whole number
+            });
+        });
+
+        return dueDates;
+    };
+
     return (
         <Container fluid className="p-4">
-            <h2 className="text-center" style={{ color: "white", fontWeight: "bold" }}>
-                Dashboard
-            </h2>
+            <h2 className="text-center text-white font-weight-bold">Dashboard</h2>
             {error && <Alert variant="danger">{error}</Alert>}
 
+            {/* Summary Cards */}
             <Row className="mb-4">
                 <Col md={4}>
                     <Card className="shadow-sm">
@@ -92,17 +103,17 @@ const CorporateDashboard = ({ userId }) => {
                             <Card.Title>
                                 <FaWallet className="me-2" /> Wallet Balance
                             </Card.Title>
-                            <Card.Text>Ksh {wallet && wallet.balance ? wallet.balance : 0}</Card.Text>
+                            <Card.Text>Ksh {wallet?.balance || 0}</Card.Text>
                         </Card.Body>
                     </Card>
                 </Col>
             </Row>
 
+            {/* Current Loan Applications */}
             <Row className="mb-4">
                 <Col md={6}>
-                    <h4 style={{color:"white"}}>
-                        <FaClipboardCheck className="me-2" />
-                        Current Loan Applications
+                    <h4 className="text-white">
+                        <FaClipboardCheck className="me-2" /> Current Loan Applications
                     </h4>
                     <Table striped bordered hover>
                         <thead>
@@ -110,30 +121,41 @@ const CorporateDashboard = ({ userId }) => {
                                 <th>#</th>
                                 <th>Amount</th>
                                 <th>Status</th>
-                                <th>Date Applied</th>
+                                <th>Payment Schedule</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {loans.map((loan) => (
-                                <tr key={loan.id}>
-                                    <td>{loan.id}</td>
-                                    <td>Ksh {loan.amount}</td>
-                                    <td>{loan.status}</td>
-                                    <td>{loan.dateApplied}</td>
-                                </tr>
-                            ))}
+                            {loans.map((loan) => {
+                                // Parse the payment_schedule from JSON string to JavaScript object
+                                const paymentSchedule = JSON.parse(loan.payment_schedule);
+                                const paymentScheduleWithDueDates = calculateDueDates(loan.created_at, paymentSchedule);
+
+                                return (
+                                    <tr key={loan.id}>
+                                        <td>{loan.id}</td>
+                                        <td>Ksh {loan.amount}</td>
+                                        <td>{loan.status}</td>
+                                        <td>
+                                            {paymentScheduleWithDueDates.map((p) => (
+                                                <div key={p.month}>
+                                                    Month {p.month}: Ksh {p.amount_due} - {p.status} - Due: {new Date(p.due_date).toLocaleDateString()}
+                                                </div>
+                                            ))}
+                                        </td>
+                                    </tr>
+                                );
+                            })}
                         </tbody>
                     </Table>
                     <Button variant="primary" className="mt-3">
-                        <FaMoneyBillAlt className="me-2" />
-                        Apply for New Loan
+                        <FaMoneyBillAlt className="me-2" /> Apply for New Loan
                     </Button>
                 </Col>
 
+                {/* Payment History */}
                 <Col md={6}>
-                    <h4 style={{color:"white"}}>
-                        <FaHistory className="me-2" />
-                        Payment History
+                    <h4 className="text-white">
+                        <FaHistory className="me-2" /> Payment History
                     </h4>
                     <Table striped bordered hover>
                         <thead>
@@ -148,7 +170,7 @@ const CorporateDashboard = ({ userId }) => {
                             {paymentHistory.map((payment) => (
                                 <tr key={payment.id}>
                                     <td>{payment.id}</td>
-                                    <td>{payment.date}</td>
+                                    <td>{payment.payment_date}</td>
                                     <td>Ksh {payment.amount}</td>
                                     <td>{payment.status}</td>
                                 </tr>
@@ -158,11 +180,11 @@ const CorporateDashboard = ({ userId }) => {
                 </Col>
             </Row>
 
+            {/* Recent Orders */}
             <Row className="mb-4">
                 <Col>
-                    <h4 style={{color:"white"}}>
-                        <FaBoxOpen className="me-2" />
-                        Recent Orders
+                    <h4 className="text-white">
+                        <FaBoxOpen className="me-2" /> Recent Orders
                     </h4>
                     <Table striped bordered hover>
                         <thead>
@@ -189,12 +211,11 @@ const CorporateDashboard = ({ userId }) => {
                 </Col>
             </Row>
 
-            {/* Invoices Table */}
+            {/* Invoices */}
             <Row className="mb-4">
                 <Col>
-                    <h4 style={{color:"white"}}>
-                        <FaFileInvoice className="me-2" />
-                         Invoices
+                    <h4 className="text-white">
+                        <FaFileInvoice className="me-2" /> Invoices
                     </h4>
                     <Table striped bordered hover>
                         <thead>
@@ -214,54 +235,18 @@ const CorporateDashboard = ({ userId }) => {
                                     <td>Ksh {invoice.amount}</td>
                                     <td>{invoice.status}</td>
                                     <td>
-                                        {invoice.status !== 'confirmed' && (
-                                            <Button variant="success" onClick={() => confirmInvoice(invoice.id)}>
-                                                Confirm
-                                            </Button>
-                                        )}
+                                        <Button
+                                            variant="success"
+                                            onClick={() => confirmInvoice(invoice.id)}
+                                            disabled={invoice.status === 'confirmed'}
+                                        >
+                                            Confirm
+                                        </Button>
                                     </td>
                                 </tr>
                             ))}
                         </tbody>
                     </Table>
-                </Col>
-            </Row>
-
-            <Row className="mb-4">
-                <Col>
-                    <h4 style={{color:"white"}}>
-                        <FaHistory className="me-2" />
-                        Transaction History
-                    </h4>
-                    <Table striped bordered hover>
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Type</th>
-                                <th>Amount</th>
-                                <th>Date</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {transactions.map((transaction) => (
-                                <tr key={transaction.id}>
-                                    <td>{transaction.id}</td>
-                                    <td>{transaction.transaction_type}</td>
-                                    <td>${transaction.amount}</td>
-                                    <td>{transaction.created_at}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </Table>
-                </Col>
-            </Row>
-
-            <Row>
-                <Col>
-                    <Button variant="secondary">
-                        <FaUserEdit className="me-2" />
-                        Update Profile
-                    </Button>
                 </Col>
             </Row>
         </Container>
