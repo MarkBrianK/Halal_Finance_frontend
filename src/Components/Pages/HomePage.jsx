@@ -107,7 +107,6 @@ const HomePage = ({ isLoggedIn }) => {
                     )}
                 </Link>}
 
-
                 <Form inline onSubmit={handleSearchSubmit} style={{ flex: 1, display: 'flex', justifyContent: 'center', padding: '0 20px', background: "none" }}>
                     <Form.Group style={{ width: '300px', display: 'flex' }}>
                         <Form.Control
@@ -143,7 +142,7 @@ const HomePage = ({ isLoggedIn }) => {
                                 </Link>
                                 <Card.Body>
                                     <p style={{ color: '#555', fontStyle: 'italic', marginBottom: "5px" }}>{wholesaler.profile_description || "No description available"}</p>
-                                    <BootstrapCarousel indicators={false} interval={null} style={{ position: 'relative' }}>
+                                    <BootstrapCarousel indicators={false} interval={7000} style={{ position: 'relative' }}>
                                         {wholesaler.products.map((product, index) => (
                                             <BootstrapCarousel.Item key={index}>
                                                 {product.product_images && product.product_images.length > 0 ? (
@@ -196,26 +195,25 @@ const HomePage = ({ isLoggedIn }) => {
                     ))}
                 </Row>
             ) : (
-                <p>No products match your search.</p>
+                <div style={{ textAlign: 'center', padding: '50px' }}>
+                    <h4>No wholesalers found.</h4>
+                </div>
             )}
 
-            {/* Toast Notification for Add to Cart */}
+            {/* Toast Notification for Cart */}
             <Toast
                 onClose={() => setShowToast(false)}
                 show={showToast}
-                delay={3000} // Toast will disappear after 3 seconds
+                delay={3000}
                 autohide
                 style={{
                     position: 'absolute',
                     top: '20px',
                     right: '20px',
-                    zIndex: 1000,
+                    zIndex: 1050,
                 }}
             >
-                <Toast.Header>
-                    <strong className="me-auto">Notification</strong>
-                </Toast.Header>
-                <Toast.Body>Item added to cart!</Toast.Body>
+                <Toast.Body>Product added to cart!</Toast.Body>
             </Toast>
         </Container>
     );
