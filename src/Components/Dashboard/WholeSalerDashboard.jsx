@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Card, Table, Button, Modal, Form } from "react-bootstrap";
-import { FaMoneyCheckAlt, FaClipboardList, FaUser, FaWallet } from "react-icons/fa";
+import { FaMoneyCheckAlt, FaUser, FaWallet } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import axios from "../utilis/axiosConfig";
 
 const WholeSalerDashboard = ({ userId }) => {
   const navigate = useNavigate();
   const [wholesaler, setWholesaler] = useState(null);
-  const [investments, setInvestments] = useState([]);
-  const [earnings, setEarnings] = useState([]);
+  const [earnings, setEarnings] = useState(0); // Changed to number
   const [walletBalance, setWalletBalance] = useState(0);
   const [orders, setOrders] = useState([]);
   const [error, setError] = useState(null);
@@ -20,17 +19,24 @@ const WholeSalerDashboard = ({ userId }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // Fetch wholesaler profile data
         const wholesalerResponse = await axios.get(`/profiles/${userId}`);
         setWholesaler(wholesalerResponse.data);
-        setInvestments(wholesalerResponse.data.investments || []);
-        setEarnings(wholesalerResponse.data.earnings || []);
         setWalletBalance(wholesalerResponse.data.wallet.balance || 0);
 
+        // Fetch orders
         const ordersResponse = await axios.get("/orders");
         const filteredOrders = ordersResponse.data.filter(
           (order) => order.product.user_id.toString() === userId.toString()
         );
 
+        // Calculate total earnings from all orders
+        const totalEarnings = filteredOrders.reduce((sum, order) => {
+          const price = parseFloat(order.total_price); // Convert to float
+          return sum + (isNaN(price) ? 0 : price); // Sum up, handle NaN
+        }, 0);
+
+        setEarnings(totalEarnings);
         setOrders(filteredOrders);
       } catch (error) {
         setError("Failed to load wholesaler or orders data. Please try again later.");
@@ -125,7 +131,7 @@ const WholeSalerDashboard = ({ userId }) => {
         {wholesaler?.name ? `${wholesaler.name}'s Dashboard` : "Dashboard"}
       </h2>
 
-      {/* Wallet, Investments, and Earnings */}
+      {/* Wallet, Earnings */}
       <Row className="mb-4">
         <Col className="text-end">
           <Button variant="success" onClick={handleAddProduct} className="me-2 mb-2">
@@ -152,17 +158,8 @@ const WholeSalerDashboard = ({ userId }) => {
         <Col md={4}>
           <Card className="shadow-sm text-center">
             <Card.Body>
-              <Card.Title><FaMoneyCheckAlt className="me-2" /> Total Investments</Card.Title>
-              <Card.Text>{investments.length}</Card.Text>
-            </Card.Body>
-          </Card>
-        </Col>
-
-        <Col md={4}>
-          <Card className="shadow-sm text-center">
-            <Card.Body>
-              <Card.Title><FaClipboardList className="me-2" /> Total Earnings</Card.Title>
-              <Card.Text>{earnings.length}</Card.Text>
+              <Card.Title><FaMoneyCheckAlt className="me-2" /> Total Earnings</Card.Title>
+              <Card.Text>Ksh {earnings.toFixed(2)}</Card.Text> {/* Displaying total earnings with two decimal points */}
             </Card.Body>
           </Card>
         </Col>
@@ -196,7 +193,7 @@ const WholeSalerDashboard = ({ userId }) => {
               <tr>
                 <th>Product</th>
                 <th>Quantity</th>
-                <th>Total order price</th>
+                <th>Total Order Price</th>
                 <th>Status</th>
                 <th>Action</th>
               </tr>
@@ -248,24 +245,22 @@ const WholeSalerDashboard = ({ userId }) => {
           <Modal.Title>{modalAction === "add" ? "Add Funds" : "Withdraw Funds"}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Form>
-            <Form.Group controlId="amount">
-              <Form.Label>Amount (Ksh)</Form.Label>
-              <Form.Control
-                type="number"
-                placeholder="Enter amount"
-                value={amount}
-                onChange={handleAmountChange}
-              />
-            </Form.Group>
-          </Form>
+          <Form.Group>
+            <Form.Label>Amount (Ksh)</Form.Label>
+            <Form.Control
+              type="number"
+              value={amount}
+              onChange={handleAmountChange}
+              placeholder="Enter amount"
+            />
+          </Form.Group>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowModal(false)}>
-            Cancel
+            Close
           </Button>
           <Button variant="primary" onClick={handleModalSubmit}>
-            {modalAction === "add" ? "Add Funds" : "Withdraw"}
+            {modalAction === "add" ? "Add" : "Withdraw"}
           </Button>
         </Modal.Footer>
       </Modal>

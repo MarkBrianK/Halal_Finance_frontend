@@ -81,7 +81,7 @@ const CorporateDashboard = ({ userId }) => {
                                 <FaMoneyBillAlt className="me-2" /> Total Loans Approved
                             </Card.Title>
                             <Card.Text>
-                                {loans.filter(loan => loan.status === "Approved").length}
+                                {loans.filter(loan => loan.status === "active").length}
                             </Card.Text>
                         </Card.Body>
                     </Card>
@@ -117,7 +117,7 @@ const CorporateDashboard = ({ userId }) => {
                             {loans.map((loan) => (
                                 <tr key={loan.id}>
                                     <td>{loan.id}</td>
-                                    <td>${loan.amount}</td>
+                                    <td>Ksh {loan.amount}</td>
                                     <td>{loan.status}</td>
                                     <td>{loan.dateApplied}</td>
                                 </tr>
