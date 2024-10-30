@@ -37,6 +37,7 @@ export default function Cart() {
       await axios.delete(`/cart_items/${itemId}`);
       alert("Item removed from cart.");
       fetchCartItems();
+      window.location.reload()
     } catch (error) {
       console.error('Error removing item:', error);
       alert("Failed to remove item. Please try again.");
@@ -49,6 +50,7 @@ export default function Cart() {
       setCartItems([]);
       setTotalPrice(0);
       setIsCartEmpty(true);
+      window.location.reload()
       alert("Cart cleared successfully!");
     } catch (error) {
       console.error('Error clearing cart:', error);
@@ -67,6 +69,7 @@ export default function Cart() {
       await axios.post('/orders', { order: orderData });
       alert("Checkout successful!");
       handleClearCart();
+      window.location.reload()
     } catch (error) {
       console.error("Error during checkout:", error);
       alert("Checkout failed. Please try again.");
