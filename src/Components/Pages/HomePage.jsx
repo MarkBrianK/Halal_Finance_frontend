@@ -47,7 +47,7 @@ const HomePage = ({ isLoggedIn }) => {
 
   return (
     <Container fluid style={{ padding: '2px 0' }}>
-      <Form inline onSubmit={handleSearchSubmit} style={{ display: 'flex', justifyContent: 'center', padding: '0 20px' }}>
+      <Form inline onSubmit={handleSearchSubmit} style={{ display: 'flex', justifyContent: 'center', padding: '0 20px', background:"none", marginTop:"20px"}}>
         <Form.Group style={{ width: '300px', display: 'flex' }}>
           <Form.Control
             type="text"
@@ -63,7 +63,7 @@ const HomePage = ({ isLoggedIn }) => {
       </Form>
 
       {filteredWholesalers.length > 0 ? (
-        <Row className="justify-content-center">
+        <Row className="justify-content-center" style={{marginTop:"20px"}}>
           {filteredWholesalers.map((wholesaler) => (
             <Col xs={12} sm={6} md={4} lg={3} key={wholesaler.id} className="mb-4">
               <Card className="text-center position-relative" style={{ backgroundColor: 'white', color: '#333', borderRadius: '15px', boxShadow: '0 4px 10px rgba(0, 0, 0, 0.2)' }}>
