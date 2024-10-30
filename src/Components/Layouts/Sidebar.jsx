@@ -94,7 +94,7 @@ function Sidebar() {
                 <Offcanvas.Header style={{ justifyContent: 'space-between' }}>
                     <Offcanvas.Title style={{ display: 'flex', alignItems: 'center' }}>
                         <img src={logo} alt="Company Logo" style={{ marginRight: '10px', height: '50px', borderRadius: "50%" }} />
-                        <span className={styles.halal}>Halal Finance</span>
+                        <span className={styles.halal}>Ipool</span>
                     </Offcanvas.Title>
                 </Offcanvas.Header>
                 <Offcanvas.Body>
