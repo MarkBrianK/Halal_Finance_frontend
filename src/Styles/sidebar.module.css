@@ -1,10 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
-@import url('https://fonts.cdnfonts.com/css/noto-serif-display');
+@import url('https://fonts.cdnfonts.com/css/coca-cola-ii');
 
 .halal {
-    font-family: 'Noto Serif Display', sans-serif;
+    font-family: 'Coca Cola ii', sans-serif;
     font-style: normal;
-    font-size: 25px;
+    font-size: 40px;
     color: #c7a034;
     font-weight: bolder;
 }
