@@ -8,7 +8,7 @@ function SignUp() {
     email: '',
     password: '',
     password_confirmation: '',
-    role: 'corporate' 
+    role: 'corporate'
   });
   const [error, setError] = useState('');
   const navigate = useNavigate();
@@ -23,7 +23,7 @@ function SignUp() {
     axios.post('/users', { user: formData })
       .then(response => {
         alert('Confirmation email sent! Check your inbox.');
-        navigate("/login");
+        navigate("/confirm");
       })
       .catch(error => {
         setError(error.response?.data.error || 'Something went wrong');
