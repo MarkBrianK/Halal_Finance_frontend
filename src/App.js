@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, Suspense } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { Container, Row, Col } from 'react-bootstrap';
 import LoadingSpinner from './Components/Layouts/LoadingSpinner';
-import { jwtDecode } from 'jwt-decode';
+import {jwtDecode} from 'jwt-decode';
 import axios from './Components/utilis/axiosConfig';
 import Header from './Components/Layouts/Header';
 import Wallet from './Components/Pages/Wallet';
@@ -72,9 +72,11 @@ const App = () => {
         }
     }, [handleLogout]);
 
+    const showHeader = location.pathname !== '/login' && location.pathname !== '/signup';
+
     return (
         <Container fluid>
-            {isLoggedIn && <Header user={userProfile} userId={userId} />}
+            {showHeader && <Header user={userProfile} userId={userId} />}
             {isLoggedIn && (
                 <div style={{ position: 'absolute', top: '20px', right: '20px', zIndex: 1050 }}>
                     <Sidebar />

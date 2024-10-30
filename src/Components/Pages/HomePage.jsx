@@ -86,11 +86,12 @@ const HomePage = ({ isLoggedIn }) => {
                           style={{ objectFit: 'contain', maxWidth: '100%', height: '200px', marginBottom: '15px', borderRadius: '15px' }}
                         />
                         <Card.Text style={{ fontSize: '1.2rem', fontWeight: 'bold', color: 'black' }}>{product.name}</Card.Text>
+                        <Card.Text style={{ fontSize: '0.8rem', fontWeight: '100', color: 'grey' }}>{product.description}</Card.Text>
                         <Card.Text style={{ color: '#333' }}>Ksh {product.price}</Card.Text>
                         {isLoggedIn && (
                           <Button variant="outline-primary" size="sm" onClick={() => {
                             addToCart(product);
-                            setShowToast(true); // Show toast when item is added to cart
+                            setShowToast(true);
                           }}>
                             <FaShoppingCart style={{ marginRight: '5px' }} /> Add to Cart
                           </Button>
