@@ -93,7 +93,7 @@ const WholeSalerDashboard = ({ userId }) => {
           <Table striped bordered hover variant="dark">
             <thead>
               <tr>
-                <th>Order ID</th>
+                <th>Product Ordered</th>
                 <th>Status</th>
                 <th>Total Price</th>
                 <th>Actions</th>
@@ -102,7 +102,7 @@ const WholeSalerDashboard = ({ userId }) => {
             <tbody>
               {orders.map((order) => (
                 <tr key={order.id}>
-                  <td>{order.id}</td>
+                  <td>{order.product.name}</td>
                   <td>{order.status}</td>
                   <td>{order.total_price}</td>
                   <td>
