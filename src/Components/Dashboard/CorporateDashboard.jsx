@@ -132,11 +132,10 @@ const CorporateDashboard = ({ userId }) => {
                 <Col>
                     <h4 className="text-white"><FaBoxOpen /> Recent Orders</h4>
                     <Table striped bordered hover>
-                        <thead><tr><th>#</th><th>Product</th><th>Quantity</th><th>Total Price</th><th>Status</th></tr></thead>
+                        <thead><tr><th>Product</th><th>Quantity</th><th>Total Price</th><th>Status</th></tr></thead>
                         <tbody>
                             {data.orders.map((order) => (
                                 <tr key={order.id}>
-                                    <td>{order.id}</td>
                                     <td>{order.product.name}</td>
                                     <td>{order.quantity}</td>
                                     <td>Ksh {order.total_price}</td>
@@ -152,12 +151,11 @@ const CorporateDashboard = ({ userId }) => {
                 <Col>
                     <h4 className="text-white"><FaFileInvoice /> Invoices</h4>
                     <Table striped bordered hover>
-                        <thead><tr><th>#</th><th>Order ID</th><th>Amount</th><th>Status</th><th>Actions</th></tr></thead>
+                        <thead><tr><th>Order</th><th>Amount</th><th>Status</th><th>Actions</th></tr></thead>
                         <tbody>
                             {data.invoices.map((invoice) => (
                                 <tr key={invoice.id}>
-                                    <td>{invoice.id}</td>
-                                    <td>{invoice.order_id}</td>
+                                    <td>{invoice.order.product.name}</td>
                                     <td>Ksh {invoice.amount}</td>
                                     <td>{invoice.status}</td>
                                     <td>
