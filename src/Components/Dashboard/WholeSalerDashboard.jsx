@@ -75,12 +75,12 @@ const WholeSalerDashboard = ({ userId }) => {
 
       <Row className="mb-4">
         <Col md={4}>
-          <Wallet userId={userId} /> 
+          <Wallet userId={userId} />
         </Col>
         <Col md={4}>
           <Card className="shadow-sm text-center">
             <Card.Body>
-              <Card.Title style={{ color: "white" }}><FaMoneyCheckAlt className="me-2" /> Total Earnings</Card.Title>
+              <Card.Title style={{ color: "black" }}><FaMoneyCheckAlt className="me-2" /> Total Earnings</Card.Title>
               <Card.Text>Ksh {earnings.toFixed(2)}</Card.Text>
             </Card.Body>
           </Card>

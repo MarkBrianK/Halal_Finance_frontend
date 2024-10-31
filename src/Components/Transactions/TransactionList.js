@@ -1,6 +1,6 @@
 import React from "react";
 
-export default TransactionList(){
+export default function TransactionList(){
     return(
         <div></div>
     )
