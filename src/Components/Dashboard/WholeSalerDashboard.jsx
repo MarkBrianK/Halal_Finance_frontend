@@ -75,7 +75,7 @@ const WholeSalerDashboard = ({ userId }) => {
 
       <Row className="mb-4">
         <Col md={4}>
-          <Wallet userId={userId} /> {/* Render Wallet component here */}
+          <Wallet userId={userId} /> 
         </Col>
         <Col md={4}>
           <Card className="shadow-sm text-center">
